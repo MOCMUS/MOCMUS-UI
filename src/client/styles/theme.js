@@ -1,4 +1,24 @@
 export const styles = {
+    // Common styles
+    title:{
+        display: 'flex',
+        alignItems: 'center',
+        fontSize: '2vw',
+        justifyContent: 'center',
+        color: 'royalblue'
+    },
+
+    button:{
+        height: '10vh',
+        width: '12vw',
+        fontSize: '2vw'
+    },
+
+    icon:{
+        fontSize: '3vw'
+    },
+
+    // Layout styles
 
     layoutContainer:{
         width:'100vw',
@@ -31,4 +51,29 @@ export const styles = {
     gridBottomItemLayer2:{
         flex: 1
     },
+
+    // InitializationControlsContent styles
+
+    divInitContent:{
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignContent: 'center',
+        width: '100%',
+        height: '100%'
+    },
+
+    gridItemTitle:{
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center'
+    },
+
+    gridItemButton:{
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'space-around'
+    },
+
+
+
 }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import { styles } from './../styles/theme'
+import InitializationControlsContent from './InitializationControlsContent';
+
 
 export default function Layout () {
 
@@ -15,6 +17,7 @@ export default function Layout () {
             </Grid>
             <Grid container style={styles.gridRightItemLayer1} >
                 <Grid item style={styles.gridTopItemLayer2} >
+                    <InitializationControlsContent />
                 </Grid>
                 <Grid item style={styles.gridBottomItemLayer2} >
                 </Grid>
