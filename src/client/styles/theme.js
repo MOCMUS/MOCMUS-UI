@@ -9,7 +9,7 @@ export const styles = {
     },
 
     button:{
-        height: '10vh',
+        height: '8vh',
         width: '12vw',
         fontSize: '2vw'
     },

@@ -17,19 +17,23 @@ export default function SpindleControlsContent () {
                 <Grid item style={styles.gridItemButton}
                 >
                 <TextField
-                    id="standard-number"
+                    id="set-speed"
                     label="Set value"
                     type="number"
+                    inputProps={{min: '0', max: '30000'}}
                     variant='outlined'
+                    style={{width: '12vw'}}
                     InputLabelProps={{
                     shrink: true,
                     }}
                 />
                 <TextField
-                    id="standard-number"
+                    id="current-speed"
                     label="Current value"
                     type="number"
+                    inputProps={{min: '0', readOnly: true}}
                     variant='outlined'
+                    style={{width: '12vw'}}
                     InputLabelProps={{
                     shrink: true,
                     }}
