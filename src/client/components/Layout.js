@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import { styles } from './../styles/theme'
 import InitializationControlsContent from './InitializationControlsContent';
+import SpindleControlsContent from './SpindleControlsContent';
 
 
 export default function Layout () {
@@ -17,9 +18,10 @@ export default function Layout () {
             </Grid>
             <Grid container style={styles.gridRightItemLayer1} >
                 <Grid item style={styles.gridTopItemLayer2} >
-                    <InitializationControlsContent />
+                  <InitializationControlsContent />
                 </Grid>
                 <Grid item style={styles.gridBottomItemLayer2} >
+                  <SpindleControlsContent />
                 </Grid>
             </Grid>
         </Grid>
