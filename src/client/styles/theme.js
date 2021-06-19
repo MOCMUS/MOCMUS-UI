@@ -9,13 +9,13 @@ export const styles = {
     },
 
     button:{
-        height: '8vh',
+        height: '6vh',
         width: '12vw',
-        fontSize: '2vw'
+        fontSize: '1.5vw'
     },
 
     icon:{
-        fontSize: '3vw'
+        fontSize: '2vw'
     },
 
     // Layout styles
