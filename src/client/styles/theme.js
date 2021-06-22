@@ -5,17 +5,24 @@ export const styles = {
         alignItems: 'center',
         fontSize: '2vw',
         justifyContent: 'center',
-        color: 'royalblue'
+        color: 'rgb(50, 130, 184)'
     },
 
     button:{
-        height: '8vh',
+        height: '6vh',
         width: '12vw',
-        fontSize: '2vw'
+        fontSize: '1.5vw',
+        backgroundColor: 'rgb(15, 76, 117)',
+        color: 'rgb(187, 225, 250)'
+    },
+
+    textfield:{
+        with: '12vw',
+        alignSelf: 'center'
     },
 
     icon:{
-        fontSize: '3vw'
+        fontSize: '2vw'
     },
 
     // Layout styles
@@ -30,7 +37,8 @@ export const styles = {
         justifyContent: 'center',
         alignItems: 'stretch',
         width: '100%',
-        height: '100%'
+        height: '100%',
+        backgroundColor: 'rgb(27, 38, 44)'
     },
 
     gridLeftItemLayer1:{
@@ -66,12 +74,6 @@ export const styles = {
         flex: 1,
         display: 'flex',
         justifyContent: 'center'
-    },
-
-    gridItemButton:{
-        flex: 1,
-        display: 'flex',
-        justifyContent: 'space-around'
     },
 
 

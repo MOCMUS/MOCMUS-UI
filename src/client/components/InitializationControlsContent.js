@@ -10,11 +10,11 @@ export default function InitializationControlsContent () {
           <Grid style={{flexDirection: 'column'}}
             container
             >
-                <Grid item style={styles.gridItemTitle}
+                <Grid item style={{display: 'flex', flex: 1, justifyContent: 'space-around'}}
                 >
                   <h1 style={styles.title}>Homing and WCS (Work Coordinate System)</h1>  
                 </Grid>
-                <Grid item style={styles.gridItemButton}
+                <Grid item style={{display: 'flex', flex: 3, justifyContent: 'space-around', alignItems: 'center'}}
                 >
                     <Button
                         variant="contained"
