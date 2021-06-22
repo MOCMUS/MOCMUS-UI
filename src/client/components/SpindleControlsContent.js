@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Grid, Button, TextField } from '@material-ui/core';
+import { Icon, Grid, Button, TextField, Paper } from '@material-ui/core';
 import { ChevronRight, Stop } from '@material-ui/icons';
 import { styles } from './../styles/theme'
 
@@ -10,36 +10,32 @@ export default function SpindleControlsContent () {
           <Grid style={{flexDirection: 'column'}}
             container
             >
-                <Grid item style={styles.gridItemTitle}
+                <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center'}}
                 >
                   <h1 style={styles.title}>Spindle Controls</h1>  
                 </Grid>
-                <Grid item style={styles.gridItemButton}
+                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around'}}
                 >
-                <TextField
-                    id="set-speed"
-                    label="Set value"
-                    type="number"
-                    inputProps={{min: '0', max: '30000'}}
-                    variant='outlined'
-                    style={{width: '12vw'}}
-                    InputLabelProps={{
-                    shrink: true,
-                    }}
-                />
-                <TextField
-                    id="current-speed"
-                    label="Current value"
-                    type="number"
-                    inputProps={{min: '0', readOnly: true}}
-                    variant='outlined'
-                    style={{width: '12vw'}}
-                    InputLabelProps={{
-                    shrink: true,
-                    }}
-                /> 
+                <Paper style={styles.textfield}>
+                    <TextField
+                        id="set-speed"
+                        type="number"
+                        inputProps={{min: '0', max: '30000'}}
+                        style={{width: '12vw'}}
+                        variant='outlined'
+                    />
+                </Paper>
+                <Paper style={styles.textfield}>
+                    <TextField 
+                        id="current-speed"
+                        type="number"
+                        inputProps={{min: '0', readOnly: true}}
+                        style={{width: '12vw'}}
+                        variant='outlined'
+                    /> 
+                </Paper>
                 </Grid>
-                <Grid item style={styles.gridItemButton}
+                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around'}}
                 >
                     <Button
                         variant="contained"
