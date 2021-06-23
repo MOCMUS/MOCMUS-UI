@@ -5,6 +5,7 @@ export const styles = {
         alignItems: 'center',
         fontSize: '2vw',
         justifyContent: 'center',
+        fontFamily: 'sans-serif',
         color: 'rgb(50, 130, 184)'
     },
 
