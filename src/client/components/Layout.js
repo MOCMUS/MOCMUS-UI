@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Grid, Container } from '@material-ui/core';
 import { styles } from './../styles/theme'
-import InitializationControlsContent from './InitializationControlsContent';
-import SpindleControlsContent from './SpindleControlsContent';
+import InitializationControlsContent from './InitializationControlsContent'
+import SpindleControlsContent from './SpindleControlsContent'
 import StepperIncrementContent from './StepperIncrementContent'
+import MachineInfoContent from './MachineInfoContent'
 
 
 export default function Layout () {
@@ -18,6 +19,9 @@ export default function Layout () {
             <Grid item style={styles.gridLeftItemLayer1} >
               <Container style={{height: '50%'}}>
                 <StepperIncrementContent />
+              </Container>
+              <Container style={{height: '50%'}}>
+                <MachineInfoContent />
               </Container>
             </Grid>
             <Grid container style={styles.gridRightItemLayer1} >
