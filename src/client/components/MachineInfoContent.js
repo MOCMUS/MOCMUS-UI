@@ -1,9 +1,12 @@
-import React, { Component, Text } from 'react';
-import { Icon, Grid, Button, Paper, TextField, Switch } from '@material-ui/core';
+import React, { Component, Text, useState } from 'react';
+import { Icon, Grid, Button, Paper, TextField, RadioGroup } from '@material-ui/core';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { ChevronRight } from '@material-ui/icons';
 import { styles } from './../styles/theme'
 
 export default function MachineInfoContent () {
+    const [unit, setUnit] = useState('inch')
+    const [step, setStep] = useState('inc')
 
     return (
       <div style={styles.divInitContent}>
@@ -27,7 +30,7 @@ export default function MachineInfoContent () {
                                 <Paper style={{textAlign: 'center', alignSelf: 'center', width: '40%', fontSize: 45, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}>Z</Paper>
                             </Grid>
                         </Grid>
-                        <Grid container style={{display: 'flex', flex: 1, flexDirection: 'column'}} >
+                        <Grid container style={{display: 'flex', flex: 2, flexDirection: 'column'}} >
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
                                 <Paper style={{textAlign: 'center', alignSelf: 'center', width: '80%', fontSize: 25, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}>Home</Paper>
                             </Grid>
@@ -65,7 +68,7 @@ export default function MachineInfoContent () {
                                 </Paper>
                             </Grid>
                         </Grid>
-                        <Grid container style={{display: 'flex', flex: 1, flexDirection: 'column'}} >
+                        <Grid container style={{display: 'flex', flex: 2, flexDirection: 'column'}} >
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
                                 <Paper style={{textAlign: 'center', alignSelf: 'center', width: '80%', fontSize: 25, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}>WCS</Paper>
                             </Grid>
@@ -107,8 +110,36 @@ export default function MachineInfoContent () {
                     </Grid>
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center'}} >
-                    <Switch></Switch>
-                    <Switch></Switch>
+                <ToggleButtonGroup
+                    value={unit}
+                    exclusive
+                    size={'large'}
+                    style={{backgroundColor: 'rgb(187, 225, 250)'}}
+                    onChange={(e, newunit) =>  {setUnit(newunit)}}
+                    aria-label="unit"
+                    >
+                    <ToggleButton value='mm' style={{color: 'rgb(15, 76, 117)'}} aria-label="mm unit">
+                        mm
+                    </ToggleButton>
+                    <ToggleButton value='inch' style={{color: 'rgb(15, 76, 117)'}} aria-label="inch unit">
+                        inch
+                    </ToggleButton>
+                </ToggleButtonGroup>
+                <ToggleButtonGroup
+                    value={step}
+                    exclusive
+                    size={'large'}
+                    style={{backgroundColor: 'rgb(15, 76, 117)'}}
+                    onChange={(e, newstep) => setStep(newstep)}
+                    aria-label="text alignment"
+                    >
+                    <ToggleButton value='abs' style={{color: 'rgb(187, 225, 250)'}} aria-label="left aligned">
+                        abs
+                    </ToggleButton>
+                    <ToggleButton value='inc' style={{color: 'rgb(187, 225, 250)'}} aria-label="centered">
+                        inc
+                    </ToggleButton>
+                </ToggleButtonGroup>
                 </Grid>
             </Grid>
 
