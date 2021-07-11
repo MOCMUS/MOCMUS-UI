@@ -1,11 +1,11 @@
 import React, { Component, Text, useState } from 'react';
 import { Icon, Grid, Button, Paper, TextField, RadioGroup } from '@material-ui/core';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import SwitchSelector from "react-switch-selector";
 import { ChevronRight } from '@material-ui/icons';
 import { styles } from './../styles/theme'
 
 export default function MachineInfoContent () {
-    const [unit, setUnit] = useState('inch')
+    const [unit, setUnit] = useState('imp')
     const [step, setStep] = useState('inc')
 
     return (
@@ -110,36 +110,40 @@ export default function MachineInfoContent () {
                     </Grid>
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center'}} >
-                <ToggleButtonGroup
-                    value={unit}
-                    exclusive
-                    size={'large'}
-                    style={{backgroundColor: 'rgb(187, 225, 250)'}}
-                    onChange={(e, newunit) =>  {setUnit(newunit)}}
-                    aria-label="unit"
-                    >
-                    <ToggleButton value='mm' style={{color: 'rgb(15, 76, 117)'}} aria-label="mm unit">
-                        mm
-                    </ToggleButton>
-                    <ToggleButton value='inch' style={{color: 'rgb(15, 76, 117)'}} aria-label="inch unit">
-                        inch
-                    </ToggleButton>
-                </ToggleButtonGroup>
-                <ToggleButtonGroup
-                    value={step}
-                    exclusive
-                    size={'large'}
-                    style={{backgroundColor: 'rgb(15, 76, 117)'}}
-                    onChange={(e, newstep) => setStep(newstep)}
-                    aria-label="text alignment"
-                    >
-                    <ToggleButton value='abs' style={{color: 'rgb(187, 225, 250)'}} aria-label="left aligned">
-                        abs
-                    </ToggleButton>
-                    <ToggleButton value='inc' style={{color: 'rgb(187, 225, 250)'}} aria-label="centered">
-                        inc
-                    </ToggleButton>
-                </ToggleButtonGroup>
+                    <div style={{width: '50%', height: 50}}>
+                        <SwitchSelector
+                            onChange={newUnit => setUnit(newUnit)}
+                            options={[{ label: "Imperial",
+                                        value: "imp",
+                                        selectedBackgroundColor: 'rgb(15, 76, 117)',
+                                        selectedFontColor: 'rgb(187, 225, 250)'},
+                                    {   label: "Metric",
+                                        value: "met",
+                                        selectedBackgroundColor: 'rgb(15, 76, 117)',
+                                        selectedFontColor: 'rgb(187, 225, 250)'}]}
+                            initialSelectedIndex={unit}
+                            backgroundColor={'rgb(27, 38, 44)'}
+                            fontColor={'rgb(187, 225, 250)'}
+                            fontSize={25}
+                        />
+                    </div>
+                    <div style={{width: '50%', height: 50}}>
+                        <SwitchSelector
+                            onChange={newStep => setStep(newStep)}
+                            options={[{ label: "Increment",
+                                        value: "inc",
+                                        selectedBackgroundColor: 'rgb(15, 76, 117)',
+                                        selectedFontColor: 'rgb(187, 225, 250)'},
+                                    {   label: "Absolute",
+                                        value: "abs",
+                                        selectedBackgroundColor: 'rgb(15, 76, 117)',
+                                        selectedFontColor: 'rgb(187, 225, 250)'}]}
+                            initialSelectedIndex={unit}
+                            backgroundColor={'rgb(27, 38, 44)'}
+                            fontColor={'rgb(187, 225, 250)'}
+                            fontSize={25}
+                        />
+                    </div>
                 </Grid>
             </Grid>
 
