@@ -1,5 +1,6 @@
-import React, { Component, Text, useState } from 'react';
+import React, { Component, Text, useState, useEffect } from 'react';
 import { Icon, Grid, Button, Paper, TextField, RadioGroup } from '@material-ui/core';
+import Axios from 'axios'
 import SwitchSelector from "react-switch-selector";
 import { ChevronRight } from '@material-ui/icons';
 import { styles } from './../styles/theme'
@@ -7,6 +8,28 @@ import { styles } from './../styles/theme'
 export default function MachineInfoContent () {
     const [unit, setUnit] = useState('imp')
     const [step, setStep] = useState('inc')
+    const [positions, setPositions] = useState('')
+
+    const getPositions = async () => {
+        try {
+      const currentPositions = await Axios.get('/current-positions')
+          
+      setPositions(currentPositions.data)
+        
+        } catch (err) {
+          console.error(err.message)
+        }
+      }
+
+    useEffect(() => {
+        getPositions()
+        const refreshInterval = setInterval(()=>{
+            getPositions()
+        },5000)
+        
+        
+        return()=>clearInterval(refreshInterval)
+      }, [])
 
     return (
       <div style={styles.divInitContent}>
@@ -16,6 +39,7 @@ export default function MachineInfoContent () {
                 <Grid container style={{display: 'flex', flex: 1, flexDirection: 'column'}} >
                     <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
                         <h1 style={styles.title}>Current Positions</h1>
+                        {/* <h1 style={styles.title}>{positions}</h1> */}
                     </Grid>
                     <Grid container style={{display: 'flex', flex: 8}} >
                         <Grid container style={{display: 'flex', flex: 1, flexDirection: 'column'}} >
