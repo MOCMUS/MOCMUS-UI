@@ -2,7 +2,10 @@ const express = require('express');
 const os = require('os');
 const axios = require('axios');
 const cors = require('cors')
+const EventEmitter = require('events')
 const {performance} = require('perf_hooks');
+
+const event = new EventEmitter()
 
 const app = express()
 
@@ -13,10 +16,45 @@ const Readline = require('@serialport/parser-readline');
 const arduinoCOMPort = "COM4";
 
 const arduinoSerialPort = new SerialPort(arduinoCOMPort, {  
-    baudRate: 115200,
-    parser: new SerialPort.parsers.Readline("\n")
+    baudRate: 115200
+    // parser: new SerialPort.parsers.Readline("\n")
 });
 const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\n' })); //delimiter: 'ok\r\n'
+
+const datachunk = []
+parser.on('data', (data) => {
+    let datastr
+    console.log('test 1: ',data.toString())
+    datachunk.push(data.toString())
+    console.log('test 3: ',datachunk)
+
+    if (datachunk.filter(string => string.includes('>')).length) {
+        datastr = datachunk.join('')
+        console.log('test 4: ',datastr)
+        if (datastr.length) {
+            datastr = datastr.split('<')[1]
+            datastr = datastr.split('>')[0]
+        }
+        event.emit('current_positions', datastr)
+        datachunk.splice(0, datachunk.length)
+    }
+})
+
+const sendCommand = (command, eventName) => {
+    return new Promise((resolve, reject) => {
+        arduinoSerialPort.write(command, () => {
+            console.log('command sended')
+            event.once(eventName, (data) => {
+                console.log('test 2: ',data.toString())
+                resolve(data.toString());
+            });
+    
+            arduinoSerialPort.once('error', (err) => {
+                reject(err);
+            });
+        })
+    });
+}
 
 
 // function test() {
@@ -34,13 +72,15 @@ const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\n' })); //deli
 // test()
 
 
-parser.on('data', (data) => {
-    const test = [...data.split(',')]
-    console.log(test)
-})
+// parser.on('data', (data) => {
+//     const test = [...data.split(',')]
+// })
 
 app.get("/api/current-positions", (req, res) => {
-        res.send('Wpos: 0.000')
+    sendCommand('?'+'\r', 'current_positions').then((data) => {
+        res.send(data)
+    })
+        
     })
 
 

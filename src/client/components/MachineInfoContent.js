@@ -8,13 +8,31 @@ import { styles } from './../styles/theme'
 export default function MachineInfoContent () {
     const [unit, setUnit] = useState('imp')
     const [step, setStep] = useState('inc')
-    const [positions, setPositions] = useState('')
+    const [machineState, setMachineState] = useState('')
+    const [MposX, setMposX] = useState('0.000')
+    const [MposY, setMposY] = useState('0.000')
+    const [MposZ, setMposZ] = useState('0.000')
+    const [WposX, setWposX] = useState('0.000')
+    const [WposY, setWposY] = useState('0.000')
+    const [WposZ, setWposZ] = useState('0.000')
 
     const getPositions = async () => {
         try {
       const currentPositions = await Axios.get('/current-positions')
-          
-      setPositions(currentPositions.data)
+      if (typeof currentPositions.data !== 'string')
+        return
+      
+      const infoPositions = currentPositions.data.split(',')
+
+      setMachineState(infoPositions[0])
+      setMposX(infoPositions[1].split(':')[1])
+      setMposY(infoPositions[2])
+      setMposZ(infoPositions[3])
+      setWposX(infoPositions[4].split(':')[1])
+      setWposY(infoPositions[5])
+      setWposZ(infoPositions[6])
+      
+      
         
         } catch (err) {
           console.error(err.message)
@@ -63,6 +81,7 @@ export default function MachineInfoContent () {
                                     <TextField
                                         id="home-X"
                                         type="text"
+                                        value={MposX}
                                         inputProps={{readOnly: true}}
                                         InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
                                         variant='outlined'
@@ -74,6 +93,7 @@ export default function MachineInfoContent () {
                                     <TextField
                                         id="home-Y"
                                         type="text"
+                                        value={MposY}
                                         inputProps={{readOnly: true}}
                                         InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
                                         variant='outlined'
@@ -85,6 +105,7 @@ export default function MachineInfoContent () {
                                     <TextField
                                         id="home-Z"
                                         type="text"
+                                        value={MposZ}
                                         inputProps={{readOnly: true}}
                                         InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
                                         variant='outlined'
@@ -101,6 +122,7 @@ export default function MachineInfoContent () {
                                     <TextField
                                         id="wcs-X"
                                         type="text"
+                                        value={WposX}
                                         inputProps={{readOnly: true}}
                                         InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
                                         variant='outlined'
@@ -112,6 +134,7 @@ export default function MachineInfoContent () {
                                     <TextField
                                         id="wcs-Y"
                                         type="text"
+                                        value={WposY}
                                         inputProps={{readOnly: true}}
                                         InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
                                         variant='outlined'
@@ -123,6 +146,7 @@ export default function MachineInfoContent () {
                                     <TextField
                                         id="wcs-Z"
                                         type="text"
+                                        value={WposZ}
                                         inputProps={{readOnly: true}}
                                         InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
                                         variant='outlined'
