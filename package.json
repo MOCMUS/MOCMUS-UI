@@ -17,10 +17,12 @@
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "babel-polyfill": "^6.26.0",
+    "cors": "^2.8.5",
     "express": "^4.16.3",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-switch-selector": "^1.2.1"
+    "react-switch-selector": "^1.2.1",
+    "serialport": "^9.0.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.16",
@@ -45,6 +47,7 @@
     "fs-extra": "^9.0.1",
     "html-webpack-plugin": "^3.2.0",
     "nodemon": "^1.17.3",
+    "serialport": "^9.2.0",
     "style-loader": "^0.23.0",
     "url-loader": "^1.0.1",
     "webpack": "^4.5.0",
