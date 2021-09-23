@@ -1,8 +1,89 @@
 const express = require('express');
 const os = require('os');
 gcodeparser = require('gcode-parser')
+const axios = require('axios');
+const cors = require('cors')
+const EventEmitter = require('events')
+const {performance} = require('perf_hooks');
 
-const app = express();
+const event = new EventEmitter()
+
+const app = express()
+
+app.use(cors())
+
+const SerialPort = require("serialport");
+const Readline = require('@serialport/parser-readline');
+const arduinoCOMPort = "COM4";
+
+const arduinoSerialPort = new SerialPort(arduinoCOMPort, {  
+    baudRate: 115200
+    // parser: new SerialPort.parsers.Readline("\n")
+});
+const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\n' })); //delimiter: 'ok\r\n'
+
+const datachunk = []
+parser.on('data', (data) => {
+    let datastr
+    console.log('test 1: ',data.toString())
+    datachunk.push(data.toString())
+    console.log('test 3: ',datachunk)
+
+    if (datachunk.filter(string => string.includes('>')).length) {
+        datastr = datachunk.join('')
+        console.log('test 4: ',datastr)
+        if (datastr.length) {
+            datastr = datastr.split('<')[1]
+            datastr = datastr.split('>')[0]
+        }
+        event.emit('current_positions', datastr)
+        datachunk.splice(0, datachunk.length)
+    }
+})
+
+const sendCommand = (command, eventName) => {
+    return new Promise((resolve, reject) => {
+        arduinoSerialPort.write(command, () => {
+            console.log('command sended')
+            event.once(eventName, (data) => {
+                console.log('test 2: ',data.toString())
+                resolve(data.toString());
+            });
+    
+            arduinoSerialPort.once('error', (err) => {
+                reject(err);
+            });
+        })
+    });
+}
+
+
+// function test() {
+//     setInterval(() => {
+//         // arduinoSerialPort.write('$G'+'\r', () => {
+//         //     t0 = performance.now()
+//         //     console.log('request 1 sended')
+//         // })
+//         arduinoSerialPort.write('?'+'\r', () => {
+//             t2 = performance.now()
+//             console.log('request 2 sended')
+//         })
+//       }, 5000);
+// }
+// test()
+
+
+// parser.on('data', (data) => {
+//     const test = [...data.split(',')]
+// })
+
+app.get("/api/current-positions", (req, res) => {
+    sendCommand('?'+'\r', 'current_positions').then((data) => {
+        res.send(data)
+    })
+        
+    })
+
 
 gcodeparser.parseFile('gcode/circle.nc', function(err, result) {
     const gcode = []
