@@ -1,6 +1,6 @@
 const express = require('express');
 const os = require('os');
-gcodeparser = require('gcode-parser')
+const gcodeparser = require('gcode-parser')
 const axios = require('axios');
 const cors = require('cors')
 const EventEmitter = require('events')
@@ -20,7 +20,7 @@ const arduinoSerialPort = new SerialPort(arduinoCOMPort, {
     baudRate: 115200
     // parser: new SerialPort.parsers.Readline("\n")
 });
-const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\n' })); //delimiter: 'ok\r\n'
+const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\r\n' })); //delimiter: 'ok\r\n'
 
 const datachunk = []
 parser.on('data', (data) => {
@@ -72,11 +72,6 @@ const sendCommand = (command, eventName) => {
 // }
 // test()
 
-
-// parser.on('data', (data) => {
-//     const test = [...data.split(',')]
-// })
-
 app.get("/api/current-positions", (req, res) => {
     sendCommand('?'+'\r', 'current_positions').then((data) => {
         res.send(data)
@@ -92,9 +87,20 @@ gcodeparser.parseFile('gcode/circle.nc', function(err, result) {
     result.map((obj, ind) => gcode[ind] = obj.line)
     console.log(gcode);
 
-    // var interval = setInterval(function(str1, str2) {
-    //     console.log(str1 + " " + str2);
-    //   }, 1000, "Hello.", "How are you?");
+    let interval = setInterval(function(str1, str2) {
+        if (!isPaused) {
+            arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
+                console.log('sended line: ', gcode[fileIndex])
+                fileIndex++
+                if (fileIndex === gcode.length) {
+                    fileIndex = 0
+                    clearInterval(interval)
+                }
+            })
+
+        }
+        
+      }, 3000);
 })
 
 app.use(express.static('dist'));
