@@ -39,15 +39,15 @@ export default function MachineInfoContent () {
         }
       }
 
-    useEffect(() => {
-        getPositions()
-        const refreshInterval = setInterval(()=>{
-            getPositions()
-        },5000)
+    // useEffect(() => {
+    //     getPositions()
+    //     const refreshInterval = setInterval(()=>{
+    //         getPositions()
+    //     },5000)
         
         
-        return()=>clearInterval(refreshInterval)
-      }, [])
+    //     return()=>clearInterval(refreshInterval)
+    //   }, [])
 
     return (
       <div style={styles.divInitContent}>
@@ -57,7 +57,6 @@ export default function MachineInfoContent () {
                 <Grid container style={{display: 'flex', flex: 1, flexDirection: 'column'}} >
                     <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
                         <h1 style={styles.title}>Current Positions</h1>
-                        {/* <h1 style={styles.title}>{positions}</h1> */}
                     </Grid>
                     <Grid container style={{display: 'flex', flex: 8}} >
                         <Grid container style={{display: 'flex', flex: 1, flexDirection: 'column'}} >
@@ -172,7 +171,7 @@ export default function MachineInfoContent () {
                             initialSelectedIndex={unit}
                             backgroundColor={'rgb(27, 38, 44)'}
                             fontColor={'rgb(187, 225, 250)'}
-                            fontSize={25}
+                            fontSize={'20vw'}
                         />
                     </div>
                     <div style={{width: '50%', height: 50}}>
@@ -189,7 +188,7 @@ export default function MachineInfoContent () {
                             initialSelectedIndex={unit}
                             backgroundColor={'rgb(27, 38, 44)'}
                             fontColor={'rgb(187, 225, 250)'}
-                            fontSize={25}
+                            fontSize={'20vw'}
                         />
                     </div>
                 </Grid>
