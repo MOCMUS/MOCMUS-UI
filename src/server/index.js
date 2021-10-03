@@ -1,5 +1,6 @@
 const express = require('express');
 const os = require('os');
+const bodyParser = require("body-parser")
 const gcodeparser = require('gcode-parser')
 const axios = require('axios');
 const cors = require('cors')
@@ -11,6 +12,8 @@ const event = new EventEmitter()
 const app = express()
 
 app.use(cors())
+
+app.use(bodyParser.json({ limit: "50mb" }))
 
 const SerialPort = require("serialport");
 const Readline = require('@serialport/parser-readline');
@@ -25,13 +28,11 @@ const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\r\n' })); //de
 const datachunk = []
 parser.on('data', (data) => {
     let datastr
-    console.log('test 1: ',data.toString())
+    event.emit('console_command', data.toString())
     datachunk.push(data.toString())
-    console.log('test 3: ',datachunk)
 
     if (datachunk.filter(string => string.includes('>')).length) {
         datastr = datachunk.join('')
-        console.log('test 4: ',datastr)
         if (datastr.length) {
             datastr = datastr.split('<')[1]
             datastr = datastr.split('>')[0]
@@ -46,7 +47,6 @@ const sendCommand = (command, eventName) => {
         arduinoSerialPort.write(command, () => {
             console.log('command sended')
             event.once(eventName, (data) => {
-                console.log('test 2: ',data.toString())
                 resolve(data.toString());
             });
     
@@ -74,6 +74,13 @@ const sendCommand = (command, eventName) => {
 
 app.get("/api/current-positions", (req, res) => {
     sendCommand('?'+'\r', 'current_positions').then((data) => {
+        res.send(data)
+    })
+        
+    })
+
+app.post("/api/console-command", (req, res) => {
+    sendCommand(req.body.command +'\r', 'console_command').then((data) => {
         res.send(data)
     })
         

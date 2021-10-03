@@ -9,6 +9,7 @@ import InitializationControlsContent from './InitializationControlsContent'
 import SpindleControlsContent from './SpindleControlsContent'
 import StepperIncrementContent from './StepperIncrementContent'
 import MachineInfoContent from './MachineInfoContent'
+import DevContent from './DevContent'
 
 const useStyles = makeStyles({
   root: {
@@ -76,7 +77,7 @@ export default function Layout () {
         </div>
         </TabPanel>
         <TabPanel value="2">Item Two</TabPanel>
-        <TabPanel value="3">Item Three</TabPanel>
+        <TabPanel value="3"><DevContent/></TabPanel>
       </TabContext>
     </Box>
     
