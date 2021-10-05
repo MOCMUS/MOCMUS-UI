@@ -2,6 +2,7 @@ const express = require('express');
 const os = require('os');
 const bodyParser = require("body-parser")
 const gcodeparser = require('gcode-parser')
+const fileUpload = require('express-fileupload')
 const axios = require('axios');
 const cors = require('cors')
 const EventEmitter = require('events')
@@ -14,6 +15,7 @@ const app = express()
 app.use(cors())
 
 app.use(bodyParser.json({ limit: "50mb" }))
+app.use(fileUpload())
 
 const SerialPort = require("serialport");
 const Readline = require('@serialport/parser-readline');
@@ -57,20 +59,21 @@ const sendCommand = (command, eventName) => {
     });
 }
 
-
-// function test() {
-//     setInterval(() => {
-//         // arduinoSerialPort.write('$G'+'\r', () => {
-//         //     t0 = performance.now()
-//         //     console.log('request 1 sended')
-//         // })
-//         arduinoSerialPort.write('?'+'\r', () => {
-//             t2 = performance.now()
-//             console.log('request 2 sended')
-//         })
-//       }, 5000);
-// }
-// test()
+app.post('/api/upload-gcode', (req, res, next) => {
+    let uploadFile = req.files.file
+    const fileName = req.files.file.name
+    uploadFile.mv(
+      `${__dirname}/../../public/gcode/${fileName}`,
+      function (err) {
+        if (err) {
+          return res.status(500).send(err)
+        }
+        res.json({
+          file: `public/${req.files.file.name}`,
+        })
+      },
+    )
+  })
 
 app.get("/api/current-positions", (req, res) => {
     sendCommand('?'+'\r', 'current_positions').then((data) => {
@@ -87,7 +90,7 @@ app.post("/api/console-command", (req, res) => {
     })
 
 
-gcodeparser.parseFile('gcode/circle.nc', function(err, result) {
+gcodeparser.parseFile('public/gcode/circle.nc', function(err, result) {
     const gcode = []
     let isPaused = true
     let fileIndex = 0
