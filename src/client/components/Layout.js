@@ -10,6 +10,7 @@ import SpindleControlsContent from './SpindleControlsContent'
 import StepperIncrementContent from './StepperIncrementContent'
 import MachineInfoContent from './MachineInfoContent'
 import DevContent from './DevContent'
+import ConfigContent from './ConfigContent'
 
 const useStyles = makeStyles({
   root: {
@@ -51,7 +52,7 @@ export default function Layout () {
           </TabList>
         </Box>
         <TabPanel value="1" style={{padding: 0}}>
-        <div>
+        <>
           <Grid
               style={styles.gridContainer}
               container
@@ -67,16 +68,15 @@ export default function Layout () {
               </Grid>
               <Grid container style={styles.gridRightItemLayer1} >
                   <Grid item style={styles.gridTopItemLayer2} >
-                    <InitializationControlsContent />
                   </Grid>
                   <Grid item style={styles.gridBottomItemLayer2} >
                     <SpindleControlsContent />
                   </Grid>
               </Grid>
           </Grid>
-        </div>
+        </>
         </TabPanel>
-        <TabPanel value="2">Item Two</TabPanel>
+        <TabPanel value="2"><ConfigContent/></TabPanel>
         <TabPanel value="3"><DevContent/></TabPanel>
       </TabContext>
     </Box>

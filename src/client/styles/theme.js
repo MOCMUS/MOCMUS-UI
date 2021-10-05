@@ -38,7 +38,7 @@ export const styles = {
         justifyContent: 'center',
         alignItems: 'stretch',
         width: '100%',
-        height: '100%',
+        height: 'calc(100vh - 50px)',
         backgroundColor: 'rgb(27, 38, 44)'
     },
 
