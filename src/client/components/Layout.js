@@ -76,8 +76,8 @@ export default function Layout () {
           </Grid>
         </>
         </TabPanel>
-        <TabPanel value="2"><ConfigContent/></TabPanel>
-        <TabPanel value="3"><DevContent/></TabPanel>
+        <TabPanel value="2" style={{padding: 0}}><ConfigContent/></TabPanel>
+        <TabPanel value="3" style={{padding: 0}}><DevContent/></TabPanel>
       </TabContext>
     </Box>
     

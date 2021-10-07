@@ -95,7 +95,7 @@ gcodeparser.parseFile('public/gcode/circle.nc', function(err, result) {
     let isPaused = true
     let fileIndex = 0
     result.map((obj, ind) => gcode[ind] = obj.line)
-    console.log(gcode);
+    // console.log(gcode);
 
     let interval = setInterval(function(str1, str2) {
         if (!isPaused) {
