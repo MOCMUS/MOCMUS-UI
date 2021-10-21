@@ -3,7 +3,7 @@ export const styles = {
     title:{
         display: 'flex',
         alignItems: 'center',
-        fontSize: '2vw',
+        fontSize: '1.8vw',
         justifyContent: 'center',
         fontFamily: 'sans-serif',
         color: 'rgb(50, 130, 184)'
@@ -14,6 +14,22 @@ export const styles = {
         width: '12vw',
         fontSize: '1.5vw',
         backgroundColor: 'rgb(15, 76, 117)',
+        color: 'rgb(187, 225, 250)'
+    },
+
+    startButton:{
+        height: '6vh',
+        width: '12vw',
+        fontSize: '1.5vw',
+        backgroundColor: 'rgb(30, 130, 76)',
+        color: 'rgb(187, 225, 250)'
+    },
+
+    stopButton:{
+        height: '6vh',
+        width: '12vw',
+        fontSize: '1.5vw',
+        backgroundColor: 'rgb(240, 52, 52)',
         color: 'rgb(187, 225, 250)'
     },
 

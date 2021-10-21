@@ -47,14 +47,13 @@ parser.on('data', (data) => {
 const sendCommand = (command, eventName) => {
     return new Promise((resolve, reject) => {
         arduinoSerialPort.write(command, () => {
-            console.log('command sended')
             event.once(eventName, (data) => {
                 resolve(data.toString());
             });
     
-            arduinoSerialPort.once('error', (err) => {
-                reject(err);
-            });
+            // arduinoSerialPort.once('error', (err) => {
+            //     reject(err);
+            // });
         })
     });
 }

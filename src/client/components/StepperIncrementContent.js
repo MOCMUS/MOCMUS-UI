@@ -12,7 +12,7 @@ export default function StepperIncrementContent () {
             >
                 <Grid item style={styles.gridItemTitle}
                 >
-                  <h1 style={styles.title}>Stepper Motors Controls</h1>  
+                  <h1 style={styles.title}>Jog Controls</h1>  
                 </Grid>
                 <Grid item style={{display: 'flex', paddingBottom: 10, justifyContent: 'space-around'}}
                 >
