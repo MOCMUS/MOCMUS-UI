@@ -3,6 +3,7 @@ const os = require('os');
 const bodyParser = require("body-parser")
 const gcodeparser = require('gcode-parser')
 const fileUpload = require('express-fileupload')
+const fs = require('fs')
 const axios = require('axios');
 const cors = require('cors')
 const EventEmitter = require('events')
@@ -58,20 +59,41 @@ const sendCommand = (command, eventName) => {
     });
 }
 
+const checkFileExists = (file) => {
+    return fs.promises.access(file, fs.constants.F_OK)
+             .then(() => true)
+             .catch(() => false)
+  }
+
 app.post('/api/upload-gcode', (req, res, next) => {
     let uploadFile = req.files.file
     const fileName = req.files.file.name
-    uploadFile.mv(
-      `${__dirname}/../../public/gcode/${fileName}`,
-      function (err) {
-        if (err) {
-          return res.status(500).send(err)
-        }
-        res.json({
-          file: `public/${req.files.file.name}`,
-        })
-      },
-    )
+    const filePath = `${__dirname}/../../public/gcode/${fileName}`
+
+    if (!checkFileExists(filePath)) {
+        uploadFile.mv(
+            filePath,
+            function (err) {
+              if (err) {
+                return res.status(500).send(err)
+              }
+              return res.json({
+                filePath: `public/gcode/${req.files.file.name}`,
+                fileName: fileName,
+                fileStatus: 'file upload successful'
+              })
+            },
+          )
+
+    }
+
+    return res.json({
+        filePath: `public/gcode/${req.files.file.name}`,
+        fileName: fileName,
+        fileStatus: 'file already exists'
+      })
+
+
   })
 
 app.get("/api/current-positions", (req, res) => {
