@@ -33,6 +33,14 @@ export const styles = {
         color: 'rgb(187, 225, 250)'
     },
 
+    pauseButton:{
+        height: '6vh',
+        width: '12vw',
+        fontSize: '1.5vw',
+        backgroundColor: 'rgb(188,121,23)',
+        color: 'rgb(187, 225, 250)'
+    },
+
     textfield:{
         with: '12vw',
         alignSelf: 'center'

@@ -71,6 +71,7 @@ app.post('/api/upload-gcode', (req, res, next) => {
     const filePath = `${__dirname}/../../public/gcode/${fileName}`
 
     if (!checkFileExists(filePath)) {
+        console.log('test')
         uploadFile.mv(
             filePath,
             function (err) {
@@ -110,29 +111,92 @@ app.post("/api/console-command", (req, res) => {
         
     })
 
+let isPaused
+let fileIndex
+let gcodeSendInterval
+app.post("/api/gcode-runner", (req, res) => {
+    const fileName = req.body.fileName
+    const gcodeCommand = req.body.gcodeCommand
+    const filePath = `${__dirname}/../../public/gcode/${fileName}`
+    const cmdSendRate = 3000 // millisec
 
-gcodeparser.parseFile('public/gcode/circle.nc', function(err, result) {
-    const gcode = []
-    let isPaused = true
-    let fileIndex = 0
-    result.map((obj, ind) => gcode[ind] = obj.line)
-    // console.log(gcode);
 
-    let interval = setInterval(function(str1, str2) {
-        if (!isPaused) {
-            arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
-                console.log('sended line: ', gcode[fileIndex])
-                fileIndex++
-                if (fileIndex === gcode.length) {
+    switch(gcodeCommand) {
+        case 'run':
+          if (checkFileExists(filePath)) {
+              if (!gcodeSendInterval) {
+                gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
+                    const gcode = []
                     fileIndex = 0
-                    clearInterval(interval)
-                }
-            })
-
+                    isPaused = false
+                    
+                    result.map((obj, ind) => gcode[ind] = obj.line)
+                
+                    gcodeSendInterval = setInterval(function(str1, str2) {
+                            arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
+                                console.log('sended line: ', gcode[fileIndex])
+                                fileIndex++
+                                if (fileIndex === gcode.length) {
+                                    fileIndex = 0
+                                    clearInterval(gcodeSendInterval)
+                                    gcodeSendInterval = null
+                                    isPaused = null
+                                }
+                            })
+                
+                      }, cmdSendRate);
+                })
+              }
+          }
+          break;
+        case 'stop':
+        if (typeof gcodeSendInterval !== 'undefined') {
+            fileIndex = 0
+            clearInterval(gcodeSendInterval)
+            gcodeSendInterval = null
+            isPaused = null
         }
+        break;
+        case 'pause':
+        if (typeof isPaused !== 'undefined') {
+            isPaused = !isPaused
+            if (isPaused) {
+                clearInterval(gcodeSendInterval)
+                gcodeSendInterval = null
+            } else {
+                if (checkFileExists(filePath)) {
+                    if (!gcodeSendInterval) {
+                      gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
+                          const gcode = []
+                          
+                          result.map((obj, ind) => gcode[ind] = obj.line)
+                      
+                          gcodeSendInterval = setInterval(function(str1, str2) {
+                                arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
+                                    console.log('sended line: ', gcode[fileIndex])
+                                    fileIndex++
+                                    if (fileIndex === gcode.length) {
+                                        fileIndex = 0
+                                        clearInterval(gcodeSendInterval)
+                                        gcodeSendInterval = null
+                                    }
+                                })
+                      
+                            }, cmdSendRate);
+                      })
+                    }
+                }
+            }
+        }
+        break;
+        default:
+        return res.json({reqStatus: 'command does not exists'})
+      }
+
+      return res.json({reqStatus: `${gcodeCommand} request successful`})
         
-      }, 3000);
-})
+    })
+
 
 app.use(express.static('dist'));
 app.get('/api/getUsername', (req, res) => res.send({ username: os.userInfo().username }));

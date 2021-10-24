@@ -12,7 +12,7 @@ export default function SpindleControlsContent () {
             >
                 <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center'}}
                 >
-                  <h1 style={styles.title}>Machining Controls</h1>  
+                  <h1 style={styles.title}>Spindle Controls</h1>  
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around'}}
                 >
@@ -25,14 +25,6 @@ export default function SpindleControlsContent () {
                         variant='outlined'
                     />
                 </Paper>
-                <Button
-                        variant="contained"
-                        color='secondary'
-                        style={{alignSelf: 'center', ...styles.startButton}}
-                        startIcon={<PlayArrow style={styles.icon} />}
-                    >
-                        Run
-                </Button>
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around'}}
                 >
@@ -43,14 +35,6 @@ export default function SpindleControlsContent () {
                         endIcon={<ChevronRight style={styles.icon} />}
                     >
                         Set
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color='secondary'
-                        style={styles.stopButton}
-                        startIcon={<Stop style={styles.icon} />}
-                    >
-                        Stop
                     </Button>
                 </Grid>
             </Grid>
