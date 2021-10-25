@@ -74,29 +74,6 @@ export default function GcodeInfoContent () {
     }
 
     const UploadStateComponent = () => {
-        let uploadStateComponent
-        switch (fileLoading) {
-            case 100:
-                uploadStateComponent = (<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                    <CheckBox style={{color: 'rgb(30, 130, 76)', fontSize: '2vw'}} />
-                    <b style={{color: 'rgb(30, 130, 76)'}}>Ready</b>
-                </div>)
-                break;
-            case 0:
-                uploadStateComponent = (<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                    <CheckBoxOutlineBlank style={{color: '#BBE1FF', fontSize: '2vw'}} />
-                    <b style={{color: '#BBE1FF'}}>waiting for upload</b>
-                </div>)
-                break;
-            default:
-                uploadStateComponent = (<>
-                    <CircularProgressWithLabel value={Math.round(fileLoading,2)} />
-                </>)
-        }
-        return (uploadStateComponent)
-    }
-
-    const UploadStateComponent1 = () => {
             let uploadStateComponent
             if (isFileReadyToRun) {
                 uploadStateComponent = (<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -183,7 +160,7 @@ export default function GcodeInfoContent () {
                     > <b>File: </b>{((selectedFile || sessionStorage.getItem('selected_file')) ? activeFileName : 'no file selected')}</Paper>
 
                 </Grid>
-                <UploadStateComponent1/>
+                <UploadStateComponent/>
               </Grid>
 
 

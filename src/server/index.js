@@ -20,7 +20,7 @@ app.use(fileUpload())
 
 const SerialPort = require("serialport");
 const Readline = require('@serialport/parser-readline');
-const arduinoCOMPort = "COM4";
+const arduinoCOMPort = "COM5";
 
 const arduinoSerialPort = new SerialPort(arduinoCOMPort, {  
     baudRate: 115200
@@ -70,29 +70,31 @@ app.post('/api/upload-gcode', (req, res, next) => {
     const fileName = req.files.file.name
     const filePath = `${__dirname}/../../public/gcode/${fileName}`
 
-    if (!checkFileExists(filePath)) {
-        console.log('test')
-        uploadFile.mv(
-            filePath,
-            function (err) {
-              if (err) {
-                return res.status(500).send(err)
-              }
-              return res.json({
+    checkFileExists(filePath).then((isFileExist) => {
+        if (!isFileExist) {
+            uploadFile.mv(
+                filePath,
+                function (err) {
+                  if (err) {
+                    return res.status(500).send(err)
+                  }
+                  return res.json({
+                    filePath: `public/gcode/${req.files.file.name}`,
+                    fileName: fileName,
+                    fileStatus: 'file upload successful'
+                  })
+                },
+              )
+    
+        } else {
+            return res.json({
                 filePath: `public/gcode/${req.files.file.name}`,
                 fileName: fileName,
-                fileStatus: 'file upload successful'
+                fileStatus: 'file already exists'
               })
-            },
-          )
-
-    }
-
-    return res.json({
-        filePath: `public/gcode/${req.files.file.name}`,
-        fileName: fileName,
-        fileStatus: 'file already exists'
-      })
+        }
+    
+    })
 
 
   })
@@ -123,31 +125,34 @@ app.post("/api/gcode-runner", (req, res) => {
 
     switch(gcodeCommand) {
         case 'run':
-          if (checkFileExists(filePath)) {
-              if (!gcodeSendInterval) {
-                gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
-                    const gcode = []
-                    fileIndex = 0
-                    isPaused = false
+          checkFileExists(filePath).then((isFileExists) => {
+              if (isFileExists) {
+                if (!gcodeSendInterval) {
+                    gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
+                        const gcode = []
+                        fileIndex = 0
+                        isPaused = false
+                        
+                        result.map((obj, ind) => gcode[ind] = obj.line)
                     
-                    result.map((obj, ind) => gcode[ind] = obj.line)
-                
-                    gcodeSendInterval = setInterval(function(str1, str2) {
-                            arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
-                                console.log('sended line: ', gcode[fileIndex])
-                                fileIndex++
-                                if (fileIndex === gcode.length) {
-                                    fileIndex = 0
-                                    clearInterval(gcodeSendInterval)
-                                    gcodeSendInterval = null
-                                    isPaused = null
-                                }
-                            })
-                
-                      }, cmdSendRate);
-                })
+                        gcodeSendInterval = setInterval(function(str1, str2) {
+                                arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
+                                    console.log('sended line: ', gcode[fileIndex])
+                                    fileIndex++
+                                    if (fileIndex === gcode.length) {
+                                        fileIndex = 0
+                                        clearInterval(gcodeSendInterval)
+                                        gcodeSendInterval = null
+                                        isPaused = null
+                                    }
+                                })
+                    
+                          }, cmdSendRate);
+                    })
+                  }
               }
-          }
+
+          })
           break;
         case 'stop':
         if (typeof gcodeSendInterval !== 'undefined') {
@@ -164,28 +169,31 @@ app.post("/api/gcode-runner", (req, res) => {
                 clearInterval(gcodeSendInterval)
                 gcodeSendInterval = null
             } else {
-                if (checkFileExists(filePath)) {
-                    if (!gcodeSendInterval) {
-                      gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
-                          const gcode = []
-                          
-                          result.map((obj, ind) => gcode[ind] = obj.line)
-                      
-                          gcodeSendInterval = setInterval(function(str1, str2) {
-                                arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
-                                    console.log('sended line: ', gcode[fileIndex])
-                                    fileIndex++
-                                    if (fileIndex === gcode.length) {
-                                        fileIndex = 0
-                                        clearInterval(gcodeSendInterval)
-                                        gcodeSendInterval = null
-                                    }
-                                })
-                      
-                            }, cmdSendRate);
-                      })
+                checkFileExists(filePath).then((isFileExists) => {
+                    if (isFileExists) {
+                        if (!gcodeSendInterval) {
+                            gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
+                                const gcode = []
+                                
+                                result.map((obj, ind) => gcode[ind] = obj.line)
+                            
+                                gcodeSendInterval = setInterval(function(str1, str2) {
+                                      arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
+                                          console.log('sended line: ', gcode[fileIndex])
+                                          fileIndex++
+                                          if (fileIndex === gcode.length) {
+                                              fileIndex = 0
+                                              clearInterval(gcodeSendInterval)
+                                              gcodeSendInterval = null
+                                          }
+                                      })
+                            
+                                  }, cmdSendRate);
+                            })
+                          }
                     }
-                }
+
+                })
             }
         }
         break;
