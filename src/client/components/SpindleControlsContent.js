@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Icon, Grid, Button, TextField, Paper } from '@material-ui/core';
-import { ChevronRight, Stop } from '@material-ui/icons';
+import { ChevronRight, Stop, PlayArrow } from '@material-ui/icons';
 import { styles } from './../styles/theme'
 
 export default function SpindleControlsContent () {
@@ -25,15 +25,6 @@ export default function SpindleControlsContent () {
                         variant='outlined'
                     />
                 </Paper>
-                <Paper style={styles.textfield}>
-                    <TextField 
-                        id="current-speed"
-                        type="number"
-                        inputProps={{min: '0', readOnly: true}}
-                        style={{width: '12vw'}}
-                        variant='outlined'
-                    /> 
-                </Paper>
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around'}}
                 >
@@ -44,14 +35,6 @@ export default function SpindleControlsContent () {
                         endIcon={<ChevronRight style={styles.icon} />}
                     >
                         Set
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color='secondary'
-                        style={styles.button}
-                        startIcon={<Stop style={styles.icon} />}
-                    >
-                        Stop
                     </Button>
                 </Grid>
             </Grid>

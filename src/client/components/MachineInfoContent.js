@@ -1,20 +1,22 @@
 import React, { Component, Text, useState, useEffect } from 'react';
 import { Icon, Grid, Button, Paper, TextField, RadioGroup } from '@material-ui/core';
 import Axios from 'axios'
-import SwitchSelector from "react-switch-selector";
 import { ChevronRight } from '@material-ui/icons';
 import { styles } from './../styles/theme'
 
 export default function MachineInfoContent () {
-    const [unit, setUnit] = useState('imp')
-    const [step, setStep] = useState('inc')
+
     const [machineState, setMachineState] = useState('')
     const [MposX, setMposX] = useState('0.000')
     const [MposY, setMposY] = useState('0.000')
     const [MposZ, setMposZ] = useState('0.000')
+    const [MposB, setMposB] = useState('0.000')
+    const [MposC, setMposC] = useState('0.000')
     const [WposX, setWposX] = useState('0.000')
     const [WposY, setWposY] = useState('0.000')
     const [WposZ, setWposZ] = useState('0.000')
+    const [WposB, setWposB] = useState('0.000')
+    const [WposC, setWposC] = useState('0.000')
 
     const getPositions = async () => {
         try {
@@ -39,15 +41,30 @@ export default function MachineInfoContent () {
         }
       }
 
-    useEffect(() => {
-        getPositions()
-        const refreshInterval = setInterval(()=>{
-            getPositions()
-        },5000)
+    // useEffect(() => {
+    //     getPositions()
+    //     const refreshInterval = setInterval(()=>{
+    //         getPositions()
+    //     },5000)
         
         
-        return()=>clearInterval(refreshInterval)
-      }, [])
+    //     return()=>clearInterval(refreshInterval)
+    //   }, [])
+
+    const inputStyle = {
+        fontSize: 30,
+        fontFamily: 'sans-serif',
+        height: '5vh'
+      }
+
+      const axeCardStyle = {
+        textAlign: 'center',
+        alignSelf: 'center',
+        width: '40%',
+        fontSize: '3vh',
+        padding: 2,
+        backgroundColor: 'rgb(187, 225, 250)'
+      }
 
     return (
       <div style={styles.divInitContent}>
@@ -57,24 +74,29 @@ export default function MachineInfoContent () {
                 <Grid container style={{display: 'flex', flex: 1, flexDirection: 'column'}} >
                     <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
                         <h1 style={styles.title}>Current Positions</h1>
-                        {/* <h1 style={styles.title}>{positions}</h1> */}
                     </Grid>
                     <Grid container style={{display: 'flex', flex: 8}} >
                         <Grid container style={{display: 'flex', flex: 1, flexDirection: 'column'}} >
                             <Grid item style={{display: 'flex', flex: 1}} ></Grid>
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
-                                <Paper style={{textAlign: 'center', alignSelf: 'center', width: '40%', fontSize: 45, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}>X</Paper>
+                                <Paper style={axeCardStyle}> X </Paper>
                             </Grid>
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
-                                <Paper style={{textAlign: 'center', alignSelf: 'center', width: '40%', fontSize: 45, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}>Y</Paper>
+                                <Paper style={axeCardStyle}> Y </Paper>
                             </Grid>
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
-                                <Paper style={{textAlign: 'center', alignSelf: 'center', width: '40%', fontSize: 45, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}>Z</Paper>
+                                <Paper style={axeCardStyle}> Z </Paper>
+                            </Grid>
+                            <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
+                                <Paper style={axeCardStyle}> B </Paper>
+                            </Grid>
+                            <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
+                                <Paper style={axeCardStyle}> C </Paper>
                             </Grid>
                         </Grid>
                         <Grid container style={{display: 'flex', flex: 2, flexDirection: 'column'}} >
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
-                                <Paper style={{textAlign: 'center', alignSelf: 'center', width: '80%', fontSize: 25, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}>Home</Paper>
+                                <Paper style={{textAlign: 'center', alignSelf: 'center', fontSize: '3vh', padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}><b style={{marginLeft: 10, marginRight: 10}}>Home</b></Paper>
                             </Grid>
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', padding: 2}} >
                                 <Paper style={{textAlign: 'center', alignSelf: 'center', padding: 2}}>
@@ -83,7 +105,7 @@ export default function MachineInfoContent () {
                                         type="text"
                                         value={MposX}
                                         inputProps={{readOnly: true}}
-                                        InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
+                                        InputProps={{style: inputStyle}}
                                         variant='outlined'
                                     />
                                 </Paper>
@@ -95,7 +117,7 @@ export default function MachineInfoContent () {
                                         type="text"
                                         value={MposY}
                                         inputProps={{readOnly: true}}
-                                        InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
+                                        InputProps={{style: inputStyle}}
                                         variant='outlined'
                                     />
                                 </Paper>
@@ -107,7 +129,31 @@ export default function MachineInfoContent () {
                                         type="text"
                                         value={MposZ}
                                         inputProps={{readOnly: true}}
-                                        InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
+                                        InputProps={{style: inputStyle}}
+                                        variant='outlined'
+                                    />
+                                </Paper>
+                            </Grid>
+                            <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', padding: 2}} >
+                                <Paper style={{textAlign: 'center', alignSelf: 'center', padding: 2}}>
+                                    <TextField
+                                        id="home-B"
+                                        type="text"
+                                        value={MposB}
+                                        inputProps={{readOnly: true}}
+                                        InputProps={{style: inputStyle}}
+                                        variant='outlined'
+                                    />
+                                </Paper>
+                            </Grid>
+                            <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', padding: 2}} >
+                                <Paper style={{textAlign: 'center', alignSelf: 'center', padding: 2}}>
+                                    <TextField
+                                        id="home-C"
+                                        type="text"
+                                        value={MposC}
+                                        inputProps={{readOnly: true}}
+                                        InputProps={{style: inputStyle}}
                                         variant='outlined'
                                     />
                                 </Paper>
@@ -115,7 +161,7 @@ export default function MachineInfoContent () {
                         </Grid>
                         <Grid container style={{display: 'flex', flex: 2, flexDirection: 'column'}} >
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
-                                <Paper style={{textAlign: 'center', alignSelf: 'center', width: '80%', fontSize: 25, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}>WCS</Paper>
+                                <Paper style={{textAlign: 'center', alignSelf: 'center', fontSize: '3vh', padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}><b style={{marginLeft: 10, marginRight: 10}}>WCS</b></Paper>
                             </Grid>
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', padding: 2}} >
                                 <Paper style={{textAlign: 'center', alignSelf: 'center', padding: 2}}>
@@ -124,7 +170,7 @@ export default function MachineInfoContent () {
                                         type="text"
                                         value={WposX}
                                         inputProps={{readOnly: true}}
-                                        InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
+                                        InputProps={{style: inputStyle}}
                                         variant='outlined'
                                     />
                                 </Paper>
@@ -136,7 +182,7 @@ export default function MachineInfoContent () {
                                         type="text"
                                         value={WposY}
                                         inputProps={{readOnly: true}}
-                                        InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
+                                        InputProps={{style: inputStyle}}
                                         variant='outlined'
                                     />
                                 </Paper>
@@ -148,7 +194,31 @@ export default function MachineInfoContent () {
                                         type="text"
                                         value={WposZ}
                                         inputProps={{readOnly: true}}
-                                        InputProps={{style: {fontSize: 30, fontFamily: 'sans-serif'}}}
+                                        InputProps={{style: inputStyle}}
+                                        variant='outlined'
+                                    />
+                                </Paper>
+                            </Grid>
+                            <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', padding: 2}} >
+                                <Paper style={{textAlign: 'center', alignSelf: 'center', padding: 2}}>
+                                    <TextField
+                                        id="wcs-B"
+                                        type="text"
+                                        value={WposB}
+                                        inputProps={{readOnly: true}}
+                                        InputProps={{style: inputStyle}}
+                                        variant='outlined'
+                                    />
+                                </Paper>
+                            </Grid>
+                            <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', padding: 2}} >
+                                <Paper style={{textAlign: 'center', alignSelf: 'center', padding: 2}}>
+                                    <TextField
+                                        id="wcs-C"
+                                        type="text"
+                                        value={WposC}
+                                        inputProps={{readOnly: true}}
+                                        InputProps={{style: inputStyle}}
                                         variant='outlined'
                                     />
                                 </Paper>
@@ -157,42 +227,7 @@ export default function MachineInfoContent () {
 
                     </Grid>
                 </Grid>
-                <Grid item style={{display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center'}} >
-                    <div style={{width: '50%', height: 50}}>
-                        <SwitchSelector
-                            onChange={newUnit => setUnit(newUnit)}
-                            options={[{ label: "Imperial",
-                                        value: "imp",
-                                        selectedBackgroundColor: 'rgb(15, 76, 117)',
-                                        selectedFontColor: 'rgb(187, 225, 250)'},
-                                    {   label: "Metric",
-                                        value: "met",
-                                        selectedBackgroundColor: 'rgb(15, 76, 117)',
-                                        selectedFontColor: 'rgb(187, 225, 250)'}]}
-                            initialSelectedIndex={unit}
-                            backgroundColor={'rgb(27, 38, 44)'}
-                            fontColor={'rgb(187, 225, 250)'}
-                            fontSize={25}
-                        />
-                    </div>
-                    <div style={{width: '50%', height: 50}}>
-                        <SwitchSelector
-                            onChange={newStep => setStep(newStep)}
-                            options={[{ label: "Increment",
-                                        value: "inc",
-                                        selectedBackgroundColor: 'rgb(15, 76, 117)',
-                                        selectedFontColor: 'rgb(187, 225, 250)'},
-                                    {   label: "Absolute",
-                                        value: "abs",
-                                        selectedBackgroundColor: 'rgb(15, 76, 117)',
-                                        selectedFontColor: 'rgb(187, 225, 250)'}]}
-                            initialSelectedIndex={unit}
-                            backgroundColor={'rgb(27, 38, 44)'}
-                            fontColor={'rgb(187, 225, 250)'}
-                            fontSize={25}
-                        />
-                    </div>
-                </Grid>
+                
             </Grid>
 
       </div>
