@@ -18,18 +18,39 @@ app.use(cors())
 app.use(bodyParser.json({ limit: "50mb" }))
 app.use(fileUpload())
 
-const SerialPort = require("serialport");
+const SerialPort = require("serialport")
 const Readline = require('@serialport/parser-readline');
-const arduinoCOMPort = "COM5";
-
-const arduinoSerialPort = new SerialPort(arduinoCOMPort, {  
-    baudRate: 115200
-    // parser: new SerialPort.parsers.Readline("\n")
-});
-const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\r\n' })); //delimiter: 'ok\r\n'
 
 const datachunk = []
-parser.on('data', (data) => {
+let arduinoSerialPort
+
+SerialPort.list().then(ports => {
+    let done = false
+    let count = 0
+    let path = ''
+    let pm
+    ports.forEach((port) => {
+        count++
+        pm = port.manufacturer
+
+        if (typeof pm !== 'undefined' && (pm.includes('FTDI') || pm.includes('Microsoft'))) {
+            path = port.path
+            arduinoSerialPort = new SerialPort(path, { baudRate: 115200 })
+            const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\r\n' }))
+            arduinoSerialPort.on('open', function(){
+              console.log(`connected! microcontroller is now connected at port ${path}`)
+            })
+            parser.on('data', responsesDispatcher)
+            done = true
+          }
+
+        if(count === ports.length && done === false){
+        console.log(`can't find any valid microcontroller`)
+        }
+    })
+})
+
+const responsesDispatcher = (data) => {
     let datastr
     event.emit('console_command', data.toString())
     datachunk.push(data.toString())
@@ -43,7 +64,8 @@ parser.on('data', (data) => {
         event.emit('current_positions', datastr)
         datachunk.splice(0, datachunk.length)
     }
-})
+
+}
 
 const sendCommand = (command, eventName) => {
     return new Promise((resolve, reject) => {
