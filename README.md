@@ -1,10 +1,8 @@
-# simple-react-full-stack
+# MOCMUS-UI-react-full-stack
 
-[![Build Status](https://travis-ci.org/crsandeep/simple-react-full-stack.svg?branch=master)](https://travis-ci.org/crsandeep/simple-react-full-stack)
+This is an interface for a CNC milling machine developped for an university project. The user interface was built from [simple-react-full-stack](https://github.com/crsandeep/simple-react-full-stack) boilerplate. This boilerplate is used to build a full stack web application using React, Node.js, Express and Webpack. It is also configured with webpack-dev-server, eslint, prettier and babel.
 
-This is a boilerplate to build a full stack web application using React, Node.js, Express and Webpack. It is also configured with webpack-dev-server, eslint, prettier and babel.
-
-- [simple-react-full-stack](#simple-react-full-stack)
+- [MOCMUS-UI-react-full-stack](#MOCMUS-UI-react-full-stack)
   - [Introduction](#introduction)
     - [Development mode](#development-mode)
     - [Production mode](#production-mode)
@@ -39,10 +37,10 @@ In the production mode, we will have only 1 server running. All the client side 
 
 ```bash
 # Clone the repository
-git clone https://github.com/crsandeep/simple-react-full-stack
+git clone https://github.com/AlexMimault/MOCMUS-UI
 
 # Go inside the directory
-cd simple-react-full-stack
+cd MOCMUS-UI
 
 # Install dependencies
 yarn (or npm install)
