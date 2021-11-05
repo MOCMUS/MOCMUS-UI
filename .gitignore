@@ -1,6 +1,7 @@
 .vscode
 node_modules
-public/gcode
+public/gcode/*
+!public/gcode/.gitkeep
 dist
 *.log
 yarn.lock
