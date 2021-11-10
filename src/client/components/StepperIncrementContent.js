@@ -3,6 +3,7 @@ import { Icon, Grid, Button, Paper, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import { ChevronRight, Refresh } from '@material-ui/icons';
 import { styles } from './../styles/theme'
+import Axios from 'axios'
 
 const useStyles = makeStyles({
     button:{
@@ -59,6 +60,7 @@ export default function StepperIncrementContent () {
               break;
             case 'feedrate':
               value = value.replace(/[^\d.]/g, '')
+              console.log('test:', value)
             //   if (!!value) {
             //     value = value.match(/\d|\./g).join('')
             //   }
@@ -99,9 +101,7 @@ export default function StepperIncrementContent () {
         }
         if (!!jogCmd) {
             jogCmd = `$j=${step} ${unit}${jogCmd} F${!!feedrate ? feedrate : '1'}`
-            // Axios.post('/jog-command', { command: jogCmd })
-            // .then(e => {
-            // })
+            Axios.post('/jog-command', { command: jogCmd })
 
         }
 
@@ -122,9 +122,7 @@ export default function StepperIncrementContent () {
         }
         if (!!jogCmd) {
             jogCmd = `$j=${step} ${unit}${jogCmd} F${!!feedrate ? feedrate : '1'}`
-            // Axios.post('/jog-command', { command: jogCmd })
-            // .then(e => {
-            // })
+            Axios.post('/jog-command', { command: jogCmd })
 
         }
     }
