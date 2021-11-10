@@ -119,21 +119,28 @@ app.post('/api/upload-gcode', (req, res, next) => {
     })
 
 
-  })
+})
 
 app.get("/api/current-positions", (req, res) => {
     sendCommand('?'+'\r', 'current_positions').then((data) => {
         res.send(data)
     })
         
-    })
+})
 
 app.post("/api/console-command", (req, res) => {
     sendCommand(req.body.command +'\r', 'console_command').then((data) => {
         res.send(data)
     })
         
+})
+
+app.post("/api/jog-command", (req, res) => {
+    arduinoSerialPort.write(req.body.command +'\r', () => {
+        res.send('Jog sended')
     })
+        
+})
 
 let isPaused
 let fileIndex
