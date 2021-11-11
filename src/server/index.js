@@ -33,7 +33,7 @@ SerialPort.list().then(ports => {
         count++
         pm = port.manufacturer
 
-        if (typeof pm !== 'undefined' && (pm.includes('FTDI') || pm.includes('Microsoft'))) {
+        if (typeof pm !== 'undefined' && (pm.includes('FTDI') || pm.includes('Microsoft') || pm.includes('Arduino'))) {
             path = port.path
             arduinoSerialPort = new SerialPort(path, { baudRate: 115200 })
             const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\r\n' }))
