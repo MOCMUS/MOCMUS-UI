@@ -58,8 +58,8 @@ const responsesDispatcher = (data) => {
     if (datachunk.filter(string => string.includes('>')).length) {
         datastr = datachunk.join('')
         if (datastr.length) {
-            datastr = datastr.split('<')[1]
-            datastr = datastr.split('>')[0]
+            datastr = datastr?.split('<')[1]
+            datastr = datastr?.split('>')[0]
         }
         event.emit('current_positions', datastr)
         datachunk.splice(0, datachunk.length)
