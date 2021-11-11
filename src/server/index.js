@@ -52,6 +52,7 @@ SerialPort.list().then(ports => {
 
 const responsesDispatcher = (data) => {
     let datastr
+    console.log(data)
     event.emit('console_command', data.toString())
     datachunk.push(data.toString())
 
@@ -138,6 +139,13 @@ app.post("/api/console-command", (req, res) => {
 app.post("/api/jog-command", (req, res) => {
     arduinoSerialPort.write(req.body.command +'\r', () => {
         res.send('Jog sended')
+    })
+        
+})
+
+app.post("/api/homing-cycle", (req, res) => {
+    arduinoSerialPort.write(req.body.command +'\r', () => {
+        res.send('homing cycle started')
     })
         
 })

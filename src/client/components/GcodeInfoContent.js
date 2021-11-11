@@ -1,7 +1,7 @@
 import React, { Component, useState, useEffect, useRef } from 'react';
 import { Icon, Grid, Button, Paper, Container } from '@material-ui/core';
 import {Box, Typography, CircularProgress} from '@mui/material'
-import { Upload, UploadFile, CheckBoxOutlineBlank, CheckBox, ChevronRight, PlayArrow, Stop, Pause } from '@mui/icons-material';
+import { Upload, UploadFile, CheckBoxOutlineBlank, CheckBox, ChevronRight, PlayArrow, Stop, Pause, Home } from '@mui/icons-material';
 import { styles } from './../styles/theme'
 import Axios from 'axios'
 
@@ -48,6 +48,11 @@ export default function GcodeInfoContent () {
             })
         }
     }
+
+    const handleHomingButton = () => {
+          Axios.post('/homing-cycle', { command: '$H' })
+
+  }
 
     const CircularProgressWithLabel = (props) => {
         return (
@@ -99,6 +104,15 @@ export default function GcodeInfoContent () {
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around'}}
                 >
+                <Button
+                    variant="contained"
+                    color="primary"
+                    style={{alignSelf: 'center', ...styles.button}}
+                    startIcon={<Home style={styles.icon} />}
+                    onClick={() => handleHomingButton()}
+                >
+                    Home
+                </Button>
                 <Button
                         variant="contained"
                         color='secondary'
