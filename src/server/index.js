@@ -33,7 +33,7 @@ SerialPort.list().then(ports => {
         count++
         pm = port.manufacturer
 
-        if (typeof pm !== 'undefined' && (pm.includes('FTDI') || pm.includes('Microsoft'))) {
+        if (typeof pm !== 'undefined' && (pm.includes('FTDI') || pm.includes('Microsoft') || pm.includes('Arduino'))) {
             path = port.path
             arduinoSerialPort = new SerialPort(path, { baudRate: 115200 })
             const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\r\n' }))
@@ -55,18 +55,50 @@ const responsesDispatcher = (data) => {
     console.log(data)
     event.emit('console_command', data.toString())
     datachunk.push(data.toString())
+    console.log(data.toString())
+    // console.log(datachunk[datachunk.length - 1])
+
+    // Report dependant gcode send
+    if (gcodeSendMode === 2) {
+        if (data.toString().includes('ok')) {
+            if (fileIndex != gcode.length) {
+                event.emit('gcode_done')
+            }
+        }
+    }
 
     if (datachunk.filter(string => string.includes('>')).length) {
         datastr = datachunk.join('')
         if (datastr.length) {
-            datastr = datastr.split('<')[1]
-            datastr = datastr.split('>')[0]
+            datastr = datastr?.split('<')[1]
+            datastr = datastr?.split('>')[0]
         }
         event.emit('current_positions', datastr)
         datachunk.splice(0, datachunk.length)
     }
 
 }
+
+let isPaused = null
+let fileIndex
+let gcodeSendInterval
+const gcode = []
+const gcodeSendMode = 2  // 1 = Frequency Mode ; 2 = Report Mode
+
+event.on('gcode_done', () => {
+    if (isPaused !== null) {
+        if (!isPaused) {
+            arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
+                console.log('sended line: ', gcode[fileIndex])
+                fileIndex++
+                if (fileIndex === gcode.length) {
+                    fileIndex = 0
+                    isPaused = null
+                }
+            })
+        }
+    }
+})
 
 const sendCommand = (command, eventName) => {
     return new Promise((resolve, reject) => {
@@ -150,95 +182,142 @@ app.post("/api/homing-cycle", (req, res) => {
         
 })
 
-let isPaused
-let fileIndex
-let gcodeSendInterval
 app.post("/api/gcode-runner", (req, res) => {
     const fileName = req.body.fileName
     const gcodeCommand = req.body.gcodeCommand
     const filePath = `${__dirname}/../../public/gcode/${fileName}`
-    const cmdSendRate = 3000 // millisec
 
 
-    switch(gcodeCommand) {
-        case 'run':
-          checkFileExists(filePath).then((isFileExists) => {
-              if (isFileExists) {
-                if (!gcodeSendInterval) {
-                    gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
-                        const gcode = []
-                        fileIndex = 0
-                        isPaused = false
+    if (gcodeSendMode === 1) {
+        const cmdSendRate = 3000 // millisec
+
+        switch(gcodeCommand) {
+            case 'run':
+            checkFileExists(filePath).then((isFileExists) => {
+                if (isFileExists) {
+                    if (!gcodeSendInterval) {
+                        gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
+                            const gcode = []
+                            fileIndex = 0
+                            isPaused = false
+                            
+                            result.map((obj, ind) => gcode[ind] = obj.line)
                         
-                        result.map((obj, ind) => gcode[ind] = obj.line)
-                    
-                        gcodeSendInterval = setInterval(function(str1, str2) {
-                                arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
-                                    console.log('sended line: ', gcode[fileIndex])
-                                    fileIndex++
-                                    if (fileIndex === gcode.length) {
-                                        fileIndex = 0
-                                        clearInterval(gcodeSendInterval)
-                                        gcodeSendInterval = null
-                                        isPaused = null
-                                    }
-                                })
-                    
-                          }, cmdSendRate);
-                    })
-                  }
-              }
+                            gcodeSendInterval = setInterval(function(str1, str2) {
+                                    arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
+                                        console.log('sended line: ', gcode[fileIndex])
+                                        fileIndex++
+                                        if (fileIndex === gcode.length) {
+                                            fileIndex = 0
+                                            clearInterval(gcodeSendInterval)
+                                            gcodeSendInterval = null
+                                            isPaused = null
+                                        }
+                                    })
+                        
+                            }, cmdSendRate);
+                        })
+                    }
+                }
 
-          })
-          break;
-        case 'stop':
-        if (typeof gcodeSendInterval !== 'undefined') {
-            fileIndex = 0
-            clearInterval(gcodeSendInterval)
-            gcodeSendInterval = null
-            isPaused = null
-        }
-        break;
-        case 'pause':
-        if (typeof isPaused !== 'undefined') {
-            isPaused = !isPaused
-            if (isPaused) {
+            })
+            break;
+            case 'stop':
+            if (typeof gcodeSendInterval !== 'undefined') {
+                fileIndex = 0
                 clearInterval(gcodeSendInterval)
                 gcodeSendInterval = null
-            } else {
-                checkFileExists(filePath).then((isFileExists) => {
-                    if (isFileExists) {
-                        if (!gcodeSendInterval) {
-                            gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
-                                const gcode = []
-                                
-                                result.map((obj, ind) => gcode[ind] = obj.line)
-                            
-                                gcodeSendInterval = setInterval(function(str1, str2) {
-                                      arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
-                                          console.log('sended line: ', gcode[fileIndex])
-                                          fileIndex++
-                                          if (fileIndex === gcode.length) {
-                                              fileIndex = 0
-                                              clearInterval(gcodeSendInterval)
-                                              gcodeSendInterval = null
-                                          }
-                                      })
-                            
-                                  }, cmdSendRate);
-                            })
-                          }
-                    }
-
-                })
+                isPaused = null
             }
-        }
-        break;
-        default:
-        return res.json({reqStatus: 'command does not exists'})
-      }
+            break;
+            case 'pause':
+            if (typeof isPaused !== 'undefined') {
+                isPaused = !isPaused
+                if (isPaused) {
+                    clearInterval(gcodeSendInterval)
+                    gcodeSendInterval = null
+                } else {
+                    checkFileExists(filePath).then((isFileExists) => {
+                        if (isFileExists) {
+                            if (!gcodeSendInterval) {
+                                gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
+                                    const gcode = []
+                                    
+                                    result.map((obj, ind) => gcode[ind] = obj.line)
+                                
+                                    gcodeSendInterval = setInterval(function(str1, str2) {
+                                        arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
+                                            console.log('sended line: ', gcode[fileIndex])
+                                            fileIndex++
+                                            if (fileIndex === gcode.length) {
+                                                fileIndex = 0
+                                                clearInterval(gcodeSendInterval)
+                                                gcodeSendInterval = null
+                                            }
+                                        })
+                                
+                                    }, cmdSendRate);
+                                })
+                            }
+                        }
 
-      return res.json({reqStatus: `${gcodeCommand} request successful`})
+                    })
+                }
+            }
+            break;
+            default:
+            return res.json({reqStatus: 'command does not exists'})
+        }
+
+    }
+
+    if (gcodeSendMode === 2) {
+        switch(gcodeCommand) {
+            case 'run':
+                if (isPaused === null) {
+                checkFileExists(filePath).then((isFileExists) => {
+
+                    if (isFileExists) {
+                        gcodeparser.parseFile(`public/gcode/${fileName}`, function(err, result) {
+                            fileIndex = 0
+                            isPaused = false
+                            
+                            result.map((obj, ind) => gcode[ind] = obj.line)
+                        
+                            arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
+                                console.log('-- Starting -- sended line: ', gcode[fileIndex])
+                                fileIndex++
+                                if (fileIndex === gcode.length) {
+                                    fileIndex = 0
+                                    isPaused = null
+                                }
+                            })
+                        
+                        })
+                    }
+        
+                })
+                }
+                break;
+            case 'stop':
+                fileIndex = 0
+                isPaused = null
+            break;
+            case 'pause':
+            if (typeof isPaused !== 'undefined') {
+                isPaused = !isPaused
+                if (!isPaused) {
+                    event.emit('gcode_done')
+                }
+            }
+            break;
+            default:
+            return res.json({reqStatus: 'command does not exists'})
+            }
+
+    }
+
+        return res.json({reqStatus: `${gcodeCommand} request successful`})
         
     })
 
