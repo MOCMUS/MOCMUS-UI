@@ -17,13 +17,13 @@ export default function ConfigContent () {
           <Grid
               style={styles.gridContainer}
               container
-              container spacing={0}
+              spacing={0}
               >
               <Grid item style={styles.gridLeftItemLayer1} >
-                <Container style={{height: '50%'}}>
+                {/* <Container style={{height: '50%'}}>
                 </Container>
                 <Container style={{height: '50%'}}>
-                </Container>
+                </Container> */}
               </Grid>
               <Grid container style={styles.gridRightItemLayer1} >
                   <Grid item style={styles.gridTopItemLayer2} >

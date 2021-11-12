@@ -3,6 +3,7 @@ import { Icon, Grid, Button, Paper, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import { Home, LocationSearching } from '@material-ui/icons';
 import { styles } from './../styles/theme'
+import Axios from 'axios'
 
 const useStyles = makeStyles({
     inputStyle:{
@@ -29,6 +30,8 @@ export default function InitializationControlsContent () {
     const [XWCS, setXWCS] = useState(sessionStorage.getItem('XWCS') ? sessionStorage.getItem('XWCS') : '')
     const [YWCS, setYWCS] = useState(sessionStorage.getItem('YWCS') ? sessionStorage.getItem('YWCS') : '')
     const [ZWCS, setZWCS] = useState(sessionStorage.getItem('ZWCS') ? sessionStorage.getItem('ZWCS') : '')
+    const [BWCS, setBWCS] = useState(sessionStorage.getItem('BWCS') ? sessionStorage.getItem('BWCS') : '0')
+    const [CWCS, setCWCS] = useState(sessionStorage.getItem('CWCS') ? sessionStorage.getItem('CWCS') : '0')
 
     const setTxtFieldValue = (value, axis) => {
         switch(axis) {
@@ -44,17 +47,27 @@ export default function InitializationControlsContent () {
               setZWCS(value)
               sessionStorage.setItem('ZWCS', value)
               break;
+            case 'b':
+              setBWCS(value)
+              sessionStorage.setItem('BWCS', value)
+              break;
+            case 'c':
+              setCWCS(value)
+              sessionStorage.setItem('CWCS', value)
+              break;
             default:
               console.log('invalid axis')
           }
     }
 
-    const handleHomingButton = () => {
+    const handleWCSButton = () => {
         let wcsCmd = ''
 
         if (!!XWCS) wcsCmd = wcsCmd + ' X' + XWCS
         if (!!YWCS) wcsCmd = wcsCmd + ' Y' + YWCS
         if (!!ZWCS) wcsCmd = wcsCmd + ' Z' + ZWCS
+        if (!!BWCS) wcsCmd = wcsCmd + ' B' + BWCS
+        if (!!CWCS) wcsCmd = wcsCmd + ' C' + CWCS
 
         if (!!wcsCmd) {
             wcsCmd = `G10 L20 P1 ${wcsCmd}`
@@ -88,6 +101,8 @@ export default function InitializationControlsContent () {
                     <Paper className={classes.axisCard}> X </Paper>
                     <Paper className={classes.axisCard}> Y </Paper>
                     <Paper className={classes.axisCard}> Z </Paper>
+                    <Paper className={classes.axisCard}> B </Paper>
+                    <Paper className={classes.axisCard}> C </Paper>
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 1, justifyContent: 'space-around', alignItems: 'center'}}
                 >
@@ -130,6 +145,32 @@ export default function InitializationControlsContent () {
                     }}
                 /> 
                 </Paper>
+                <Paper style={styles.textfield}>
+                <TextField
+                    id="wcs-field-B"
+                    type="number"
+                    inputProps={{min: '-50', max: '50', style: inputStyle}}
+                    variant='outlined'
+                    value={BWCS}
+                    onChange={(value) => setTxtFieldValue(event.target.value, 'b')}
+                    InputLabelProps={{
+                    shrink: true,
+                    }}
+                /> 
+                </Paper>
+                <Paper style={styles.textfield}>
+                <TextField
+                    id="wcs-field-C"
+                    type="number"
+                    inputProps={{min: '-50', max: '50', style: inputStyle}}
+                    variant='outlined'
+                    value={CWCS}
+                    onChange={(value) => setTxtFieldValue(event.target.value, 'c')}
+                    InputLabelProps={{
+                    shrink: true,
+                    }}
+                /> 
+                </Paper>
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 3, justifyContent: 'space-around', alignItems: 'center'}}
                 >
@@ -138,6 +179,7 @@ export default function InitializationControlsContent () {
                         color="primary"
                         style={styles.button}
                         startIcon={<LocationSearching style={styles.icon} />}
+                        onClick={() => handleWCSButton()}
                     >
                         WCS
                     </Button>

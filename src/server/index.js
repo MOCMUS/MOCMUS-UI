@@ -55,7 +55,6 @@ const responsesDispatcher = (data) => {
     console.log(data)
     event.emit('console_command', data.toString())
     datachunk.push(data.toString())
-    console.log(data.toString())
     // console.log(datachunk[datachunk.length - 1])
 
     // Report dependant gcode send
@@ -171,6 +170,13 @@ app.post("/api/console-command", (req, res) => {
 app.post("/api/jog-command", (req, res) => {
     arduinoSerialPort.write(req.body.command +'\r', () => {
         res.send('Jog sended')
+    })
+        
+})
+
+app.post("/api/wcs-command", (req, res) => {
+    arduinoSerialPort.write(req.body.command +'\r', () => {
+        res.send('wcs offsets set')
     })
         
 })
