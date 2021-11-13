@@ -62,12 +62,13 @@ export const styles = {
         justifyContent: 'center',
         alignItems: 'stretch',
         width: '100%',
-        height: 'calc(100vh - 62px)',
+        height: 'calc(100vh - 50px)',
         backgroundColor: 'rgb(27, 38, 44)'
     },
 
     gridLeftItemLayer1:{
-        flex: 1
+        flex: 1,
+        paddingBottom: 30
     },
 
     gridRightItemLayer1:{

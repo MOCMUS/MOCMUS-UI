@@ -188,6 +188,13 @@ app.post("/api/homing-cycle", (req, res) => {
         
 })
 
+app.post("/api/unit-report", (req, res) => {
+    arduinoSerialPort.write(req.body.command +'\r', () => {
+        res.send('unit report changed')
+    })
+        
+})
+
 app.post("/api/gcode-runner", (req, res) => {
     const fileName = req.body.fileName
     const gcodeCommand = req.body.gcodeCommand

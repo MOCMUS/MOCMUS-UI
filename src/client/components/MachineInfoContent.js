@@ -166,7 +166,7 @@ export default function MachineInfoContent () {
                         </Grid>
                         <Grid container style={{display: 'flex', flex: 2, flexDirection: 'column'}} >
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
-                                <Paper style={{textAlign: 'center', alignSelf: 'center', fontSize: '3vh', padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}><b style={{marginLeft: 10, marginRight: 10}}>MPos</b></Paper>
+                                <Paper style={{textAlign: 'center', alignSelf: 'center', fontSize: '3vh', marginBottom: 10, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}><b style={{marginLeft: 10, marginRight: 10}}>MPos</b></Paper>
                             </Grid>
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', padding: 2}} >
                                 <Paper style={{textAlign: 'center', alignSelf: 'center', padding: 2}}>
@@ -226,7 +226,7 @@ export default function MachineInfoContent () {
                         </Grid>
                         <Grid container style={{display: 'flex', flex: 2, flexDirection: 'column'}} >
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
-                                <Paper style={{textAlign: 'center', alignSelf: 'center', fontSize: '3vh', padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}><b style={{marginLeft: 10, marginRight: 10}}>WPos</b></Paper>
+                                <Paper style={{textAlign: 'center', alignSelf: 'center', fontSize: '3vh', marginBottom: 10, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}><b style={{marginLeft: 10, marginRight: 10}}>WPos</b></Paper>
                             </Grid>
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', padding: 2}} >
                                 <Paper style={{textAlign: 'center', alignSelf: 'center', padding: 2}}>
@@ -286,7 +286,7 @@ export default function MachineInfoContent () {
                         </Grid>
                         <Grid container style={{display: 'flex', flex: 2, flexDirection: 'column'}} >
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center'}} >
-                                <Paper style={{textAlign: 'center', alignSelf: 'center', fontSize: '3vh', padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}><b style={{marginLeft: 10, marginRight: 10}}>WCO</b></Paper>
+                                <Paper style={{textAlign: 'center', alignSelf: 'center', fontSize: '3vh', marginBottom: 10, padding: 2, backgroundColor: 'rgb(187, 225, 250)'}}><b style={{marginLeft: 10, marginRight: 10}}>WCO</b></Paper>
                             </Grid>
                             <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', padding: 2}} >
                                 <Paper style={{textAlign: 'center', alignSelf: 'center', padding: 2}}>
