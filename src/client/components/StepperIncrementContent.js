@@ -34,7 +34,7 @@ export default function StepperIncrementContent () {
 
     const [unit, setUnit] = useState(sessionStorage.getItem('unit') ? sessionStorage.getItem('unit') : 'G21')
     const [step, setStep] = useState(sessionStorage.getItem('step') ? sessionStorage.getItem('step') : 'G91')
-    const [feedrate, setFeedrate] = useState(sessionStorage.getItem('manual_feedrate') ? sessionStorage.getItem('manual_feedrate') : '50')
+    const [feedrate, setFeedrate] = useState(sessionStorage.getItem('manual_feedrate') ? sessionStorage.getItem('manual_feedrate') : '200')
 
     const setTxtFieldValue = (value, axis) => {
         switch(axis) {
@@ -96,11 +96,11 @@ export default function StepperIncrementContent () {
         }
 
         if (!feedrate) {
-            setFeedrate('1')
-            sessionStorage.setItem('manual_feedrate', '1')
+            setFeedrate('200')
+            sessionStorage.setItem('manual_feedrate', '200')
         }
         if (!!jogCmd) {
-            jogCmd = `$j=${step} ${unit}${jogCmd} F${!!feedrate ? feedrate : '1'}`
+            jogCmd = `$j=${step} ${unit}${jogCmd} F${!!feedrate ? feedrate : '200'}`
             Axios.post('/jog-command', { command: jogCmd })
 
         }
@@ -117,11 +117,11 @@ export default function StepperIncrementContent () {
         if (!!Cjog) jogCmd = jogCmd + ' C' + Cjog
 
         if (!feedrate) {
-            setFeedrate('1')
-            sessionStorage.setItem('manual_feedrate', '1')
+            setFeedrate('200')
+            sessionStorage.setItem('manual_feedrate', '200')
         }
         if (!!jogCmd) {
-            jogCmd = `$j=${step} ${unit}${jogCmd} F${!!feedrate ? feedrate : '1'}`
+            jogCmd = `$j=${step} ${unit}${jogCmd} F${!!feedrate ? feedrate : '200'}`
             Axios.post('/jog-command', { command: jogCmd })
 
         }
@@ -285,7 +285,7 @@ export default function StepperIncrementContent () {
                     <TextField
                         id="feedrate-field"
                         type="number"
-                        inputProps={{min: '1', max: '200', style: inputStyle}}
+                        inputProps={{min: '100', max: '1500', style: inputStyle}}
                         variant='outlined'
                         value={feedrate}
                         onChange={(value) => setTxtFieldValue(event.target.value, 'feedrate')}

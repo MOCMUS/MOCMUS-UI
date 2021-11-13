@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import {TabContext, TabList, TabPanel} from '@mui/lab'
 import { styles } from './../styles/theme'
 import InitializationControlsContent from './InitializationControlsContent'
-import SpindleControlsContent from './SpindleControlsContent'
+import AlarmSwitchContent from './AlarmSwitchContent'
 import StepperIncrementContent from './StepperIncrementContent'
 import MachineInfoContent from './MachineInfoContent'
 import GcodeInfoContent from './GcodeInfoContent'
@@ -72,7 +72,7 @@ export default function Layout () {
                     <GcodeInfoContent />
                   </Grid>
                   <Grid item style={styles.gridBottomItemLayer2} >
-                    <SpindleControlsContent />
+                    <AlarmSwitchContent />
                   </Grid>
               </Grid>
           </Grid>
