@@ -142,7 +142,7 @@ export default function StepperIncrementContent () {
 
     const inputStyle = {
         textAlign: 'center',
-        fontSize: 30,
+        fontSize: '4vh',
         fontFamily: 'sans-serif',
         paddingTop: 10,
         paddingBottom: 10,
