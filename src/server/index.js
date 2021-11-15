@@ -63,6 +63,7 @@ const responsesDispatcher = (data) => {
             if (fileIndex != gcode.length) {
                 event.emit('gcode_done')
             }
+            if (fileIndex === 0) console.timeEnd('Gcode execution time')
         }
     }
 
@@ -88,7 +89,7 @@ event.on('gcode_done', () => {
     if (isPaused !== null) {
         if (!isPaused) {
             arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
-                console.log('sended line: ', gcode[fileIndex])
+                console.log('line sent: ', gcode[fileIndex])
                 fileIndex++
                 if (fileIndex === gcode.length) {
                     fileIndex = 0
@@ -298,12 +299,9 @@ app.post("/api/gcode-runner", (req, res) => {
                             result.map((obj, ind) => gcode[ind] = obj.line)
                         
                             arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
-                                console.log('-- Starting -- sended line: ', gcode[fileIndex])
+                                console.log('-- Gcode Initilialization -- line sent: ', gcode[fileIndex])
+                                console.time('Gcode execution time')
                                 fileIndex++
-                                if (fileIndex === gcode.length) {
-                                    fileIndex = 0
-                                    isPaused = null
-                                }
                             })
                         
                         })
