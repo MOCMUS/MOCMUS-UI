@@ -52,7 +52,7 @@ export default function AlarmSwitchContent () {
                 <Grid item style={{display: 'flex', flex: 5, flexDirection: 'row'}}
                 >
                   <Grid item style={{display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center'}} >
-                    <div style={{width: '50%', height: 50}}>
+                    <div style={{width: '50%', height: '6.5vh'}}>
                         <SwitchSelector
                             onChange={newUnit => setSwitchesValue(newUnit, 'unit')}
                             options={[{ label: "Imperial",
@@ -69,7 +69,7 @@ export default function AlarmSwitchContent () {
                             fontSize={'20vw'}
                         />
                     </div>
-                    <div style={{width: '50%', height: 50}}>
+                    <div style={{width: '50%', height: '6.5vh'}}>
                         <SwitchSelector
                             onChange={newStep => setSwitchesValue(newStep, 'step')}
                             options={[{ label: "Increment",

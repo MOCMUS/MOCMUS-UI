@@ -54,7 +54,8 @@ export const styles = {
 
     layoutContainer:{
         width:'100vw',
-        height:'100vh'
+        height:'100vh',
+        overflow: 'hidden'
     },
 
     gridContainer:{
@@ -62,13 +63,12 @@ export const styles = {
         justifyContent: 'center',
         alignItems: 'stretch',
         width: '100%',
-        height: 'calc(100vh - 50px)',
+        height: 'calc(100vh - 49px)',
         backgroundColor: 'rgb(27, 38, 44)'
     },
 
     gridLeftItemLayer1:{
         flex: 1,
-        paddingBottom: 30
     },
 
     gridRightItemLayer1:{
@@ -97,7 +97,6 @@ export const styles = {
     },
 
     gridItemTitle:{
-        flex: 1,
         display: 'flex',
         justifyContent: 'center'
     },
