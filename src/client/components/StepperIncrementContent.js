@@ -159,7 +159,7 @@ export default function StepperIncrementContent () {
                 >
                   <h1 style={styles.title}>Manual</h1>  
                 </Grid>
-                <Grid item style={{display: 'flex', paddingBottom: 10, justifyContent: 'space-around'}}
+                <Grid item style={{display: 'flex', justifyContent: 'space-around'}}
                 >
                     <Paper className={classes.axisCard}> X </Paper>
                     <Paper className={classes.axisCard}> Y </Paper>
