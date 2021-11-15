@@ -196,6 +196,13 @@ app.post("/api/unit-report", (req, res) => {
         
 })
 
+app.post("/api/spindle-speed", (req, res) => {
+    arduinoSerialPort.write(req.body.command +'\r', () => {
+        res.send('spindle command sent')
+    })
+        
+})
+
 app.post("/api/gcode-runner", (req, res) => {
     const fileName = req.body.fileName
     const gcodeCommand = req.body.gcodeCommand
