@@ -119,7 +119,12 @@ export default function GcodeInfoContent () {
                 >
                   <h1 style={styles.title}>Machining Controls</h1>  
                 </Grid>
-                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around'}}
+                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'center'}}>
+                  <Paper variant='outlined' style={{display: 'flex', alignItems: 'center', height: '5vh', paddingRight: '0.5vw', paddingLeft: '0.5vw', backgroundColor: 'rgb(187, 225, 250)', fontSize: '2vh'}}>
+                    <b style={{marginRight: '0.5vw'}}>Current Gcode Line:</b>{activeGcode}
+                  </Paper>
+                </Grid>
+                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around', alignItems: 'center'}}
                 >
                 <Button
                     variant="contained"
@@ -140,7 +145,7 @@ export default function GcodeInfoContent () {
                         Run
                 </Button>
                 </Grid>
-                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around'}}
+                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around', alignItems: 'center'}}
                 >
                     <Button
                         variant="contained"
@@ -161,11 +166,7 @@ export default function GcodeInfoContent () {
                         Stop
                     </Button>
                 </Grid>
-                <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                  <Paper variant='outlined' style={{display: 'flex', alignItems: 'center', height: '5vh', paddingRight: '0.5vw', paddingLeft: '0.5vw', backgroundColor: 'rgb(187, 225, 250)', fontSize: '2vh'}}>
-                    <b style={{marginRight: '0.5vw'}}>Current Gcode Line:</b>{activeGcode}
-                  </Paper>
-                </Grid>
+
               <Grid item style={{display: 'flex', width: '100%', height: '15vh', justifyContent: 'space-around', alignItems: 'center' }}>
                 <Grid item style={{display: 'flex', height: '100%', justifyContent: 'space-evenly', flexDirection: 'column'}} >
                     <Button
