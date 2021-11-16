@@ -89,11 +89,12 @@ event.on('gcode_done', () => {
     if (isPaused !== null) {
         if (!isPaused) {
             arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
-                console.log('line sent: ', gcode[fileIndex])
+                console.log(`line [${fileIndex}] sent:`, gcode[fileIndex])
                 fileIndex++
                 if (fileIndex === gcode.length) {
                     fileIndex = 0
                     isPaused = null
+                    gcode.splice(0, gcode.length)
                 }
             })
         }
@@ -200,6 +201,15 @@ app.post("/api/spindle-speed", (req, res) => {
     arduinoSerialPort.write(req.body.command +'\r', () => {
         res.send('spindle command sent')
     })
+        
+})
+
+app.get("/api/active-gcode", (req, res) => {
+    if (gcode?.length && fileIndex !== 0) {
+        return res.send(`[${fileIndex}]: ${gcode[fileIndex - 1]}`)
+    }
+
+    return res.send('no Gcode is currently executed')
         
 })
 
@@ -320,6 +330,7 @@ app.post("/api/gcode-runner", (req, res) => {
             case 'stop':
                 fileIndex = 0
                 isPaused = null
+                gcode.splice(0, gcode.length)
             break;
             case 'pause':
             if (typeof isPaused !== 'undefined') {
