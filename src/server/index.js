@@ -53,9 +53,11 @@ SerialPort.list().then(ports => {
 const responsesDispatcher = (data) => {
     let datastr
     console.log(data)
-    event.emit('console_command', data.toString())
     datachunk.push(data.toString())
-    // console.log(datachunk[datachunk.length - 1])
+    if (datachunk[datachunk.length - 1].includes('ok')) {
+        const datachunk_tmp = datachunk.map(val => 'w5pl1t' + val)
+        event.emit('console_command', datachunk_tmp)
+    }
 
     // Report dependant gcode send
     if (gcodeSendMode === 2) {
@@ -74,7 +76,6 @@ const responsesDispatcher = (data) => {
             datastr = datastr?.split('>')[0]
         }
         event.emit('current_positions', datastr)
-        datachunk.splice(0, datachunk.length)
     }
 
 }
@@ -156,6 +157,7 @@ app.post('/api/upload-gcode', (req, res, next) => {
 })
 
 app.get("/api/current-positions", (req, res) => {
+    datachunk.splice(0, datachunk.length)
     sendCommand('?'+'\r', 'current_positions').then((data) => {
         res.send(data)
     })
@@ -163,6 +165,7 @@ app.get("/api/current-positions", (req, res) => {
 })
 
 app.post("/api/console-command", (req, res) => {
+    datachunk.splice(0, datachunk.length)
     sendCommand(req.body.command +'\r', 'console_command').then((data) => {
         res.send(data)
     })
@@ -171,7 +174,7 @@ app.post("/api/console-command", (req, res) => {
 
 app.post("/api/jog-command", (req, res) => {
     arduinoSerialPort.write(req.body.command +'\r', () => {
-        res.send('Jog sended')
+        res.send('Jog sent')
     })
         
 })
