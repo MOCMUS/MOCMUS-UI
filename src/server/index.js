@@ -197,6 +197,13 @@ app.post("/api/unit-report", (req, res) => {
         
 })
 
+app.post("/api/position-report", (req, res) => {
+    arduinoSerialPort.write(req.body.command +'\r', () => {
+        res.send('position report changed')
+    })
+        
+})
+
 app.post("/api/spindle-speed", (req, res) => {
     arduinoSerialPort.write(req.body.command +'\r', () => {
         res.send('spindle command sent')

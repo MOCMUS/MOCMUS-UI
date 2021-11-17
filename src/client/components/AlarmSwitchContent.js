@@ -22,6 +22,7 @@ export default function AlarmSwitchContent () {
               sessionStorage.setItem('step', value)
               break;
             case 'postype':
+              changePosReport(value)
               setPosType(value)
               sessionStorage.setItem('pos_type', value)
               break;
@@ -40,6 +41,16 @@ export default function AlarmSwitchContent () {
 
     }
 
+    const changePosReport = (posType) => {
+      if (posType === '1') {
+          Axios.post('/position-report', { command: '$10=1' })
+      }
+      if (posType === '2') {
+          Axios.post('/position-report', { command: '$10=2' })
+      }
+
+  }
+
     return (
       <div style={styles.divInitContent}>
           <Grid style={{flexDirection: 'column'}}
@@ -52,7 +63,7 @@ export default function AlarmSwitchContent () {
                 <Grid item style={{display: 'flex', flex: 5, flexDirection: 'row'}}
                 >
                   <Grid item style={{display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center'}} >
-                    <div style={{width: '50%', height: '6.5vh'}}>
+                    <Grid item style={{width: '50%', height: '6.5vh'}}>
                         <SwitchSelector
                             onChange={newUnit => setSwitchesValue(newUnit, 'unit')}
                             options={[{ label: "Imperial",
@@ -68,24 +79,41 @@ export default function AlarmSwitchContent () {
                             fontColor={'rgb(187, 225, 250)'}
                             fontSize={'20vw'}
                         />
-                    </div>
-                    <div style={{width: '50%', height: '6.5vh'}}>
-                        <SwitchSelector
-                            onChange={newStep => setSwitchesValue(newStep, 'step')}
-                            options={[{ label: "Increment",
-                                        value: 'G91',
-                                        selectedBackgroundColor: 'rgb(15, 76, 117)',
-                                        selectedFontColor: 'rgb(187, 225, 250)'},
-                                    {   label: "Absolute",
-                                        value: 'G90',
-                                        selectedBackgroundColor: 'rgb(15, 76, 117)',
-                                        selectedFontColor: 'rgb(187, 225, 250)'}]}
-                            initialSelectedIndex={step === 'G91' ? 0 : 1}
-                            backgroundColor={'rgb(40, 50, 50)'}
-                            fontColor={'rgb(187, 225, 250)'}
-                            fontSize={'20vw'}
-                        />
-                    </div>
+                    </Grid>
+                    <Grid item style={{width: '50%', height: '6.5vh'}}>
+                      <SwitchSelector
+                          onChange={newStep => setSwitchesValue(newStep, 'step')}
+                          options={[{ label: "Increment",
+                                      value: 'G91',
+                                      selectedBackgroundColor: 'rgb(15, 76, 117)',
+                                      selectedFontColor: 'rgb(187, 225, 250)'},
+                                  {   label: "Absolute",
+                                      value: 'G90',
+                                      selectedBackgroundColor: 'rgb(15, 76, 117)',
+                                      selectedFontColor: 'rgb(187, 225, 250)'}]}
+                          initialSelectedIndex={step === 'G91' ? 0 : 1}
+                          backgroundColor={'rgb(40, 50, 50)'}
+                          fontColor={'rgb(187, 225, 250)'}
+                          fontSize={'20vw'}
+                      />
+                    </Grid>
+                    <Grid item style={{width: '50%', height: '6.5vh'}}>
+                      <SwitchSelector
+                          onChange={newPosType => setSwitchesValue(newPosType, 'postype')}
+                          options={[{ label: "MPos",
+                                      value: '1',
+                                      selectedBackgroundColor: 'rgb(15, 76, 117)',
+                                      selectedFontColor: 'rgb(187, 225, 250)'},
+                                  {   label: "WPos",
+                                      value: '2',
+                                      selectedBackgroundColor: 'rgb(15, 76, 117)',
+                                      selectedFontColor: 'rgb(187, 225, 250)'}]}
+                          initialSelectedIndex={posType === '1' ? 0 : 1}
+                          backgroundColor={'rgb(40, 50, 50)'}
+                          fontColor={'rgb(187, 225, 250)'}
+                          fontSize={'20vw'}
+                      />
+                    </Grid>
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 1, flexDirection: 'column'}}>
 
