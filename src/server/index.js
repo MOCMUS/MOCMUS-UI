@@ -33,7 +33,7 @@ SerialPort.list().then(ports => {
         count++
         pm = port.manufacturer
 
-        if (typeof pm !== 'undefined' && (pm.includes('FTDI') || pm.includes('Microsoft') || pm.includes('Arduino'))) {
+        if (typeof pm !== 'undefined' && (pm.includes('FTDI') || pm.includes('Arduino'))) {
             path = port.path
             arduinoSerialPort = new SerialPort(path, { baudRate: 115200 })
             const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\r\n' }))
@@ -216,10 +216,11 @@ app.post("/api/spindle-speed", (req, res) => {
 
 app.get("/api/active-gcode", (req, res) => {
     if (gcode?.length && fileIndex !== 0) {
-        return res.send(`[${fileIndex}]: ${gcode[fileIndex - 1]}`)
+        const gcodeLine = `[${fileIndex}]: ${gcode[fileIndex - 1]}`
+        return res.send({activeGcode: gcodeLine, index: fileIndex, fileLength: gcode?.length})
     }
 
-    return res.send('no Gcode is currently executed')
+    return res.send({activeGcode: 'no Gcode is currently executed', index: 0, fileLength: 100})
         
 })
 

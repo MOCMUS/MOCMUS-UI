@@ -9,8 +9,10 @@ export default function GcodeInfoContent () {
     const [selectedFile, setSelectedFile] = useState(null)
     const [activeFileName, setActiveFileName] = useState(sessionStorage.getItem('selected_file') ? sessionStorage.getItem('selected_file') : 'no file selected')
     const [fileLoading, setFileLoading] = useState(0)
+    const [gcodeIndex, setGcodeIndex] = useState(sessionStorage.getItem('file_index') ? sessionStorage.getItem('file_index') : 0)
+    const [gcodeFileLength, setGcodeFileLength] = useState(sessionStorage.getItem('file_length') ? sessionStorage.getItem('file_length') : 100)
     const [isFileReadyToRun, setIsFileReadyToRun] = useState(sessionStorage.getItem('selected_file') ? true : false)
-    const [activeGcode, setActiveGcode] = useState('')
+    const [activeGcode, setActiveGcode] = useState(sessionStorage.getItem('active_gcode_line') ? sessionStorage.getItem('active_gcode_line') : '')
     const hiddenFileInput = useRef(null)
     const acceptedFileTypes = '.nc, .cnc, .ngc, .gcode, .tap'
 
@@ -26,7 +28,12 @@ export default function GcodeInfoContent () {
 
     const getActiveGcode = () => {
       Axios.get('/active-gcode').then(e => {
-        setActiveGcode(e.data)
+        setActiveGcode(e.data.activeGcode)
+        sessionStorage.setItem('active_gcode_line', e.data.activeGcode)
+        setGcodeIndex(e.data.index)
+        sessionStorage.setItem('file_index', e.data.index)
+        setGcodeFileLength(e.data.fileLength)
+        sessionStorage.setItem('file_length', e.data.fileLength)
       })
     }
 
@@ -119,10 +126,16 @@ export default function GcodeInfoContent () {
                 >
                   <h1 style={styles.title}>Machining Controls</h1>  
                 </Grid>
-                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'center'}}>
-                  <Paper variant='outlined' style={{display: 'flex', alignItems: 'center', height: '5vh', paddingRight: '0.5vw', paddingLeft: '0.5vw', backgroundColor: 'rgb(187, 225, 250)', fontSize: '2vh'}}>
-                    <b style={{marginRight: '0.5vw'}}>Current Gcode Line:</b>{activeGcode}
-                  </Paper>
+                <Grid item style={{display: 'flex', flex: 2, flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                  <Grid item>
+                    <CircularProgressWithLabel value={Math.round((gcodeIndex / gcodeFileLength) * 100,2)} />
+                  </Grid>
+                  <Grid item>
+                    <Paper variant='outlined' style={{display: 'flex', alignItems: 'center', height: '5vh', paddingRight: '0.5vw', paddingLeft: '0.5vw', backgroundColor: 'rgb(187, 225, 250)', fontSize: '2vh'}}>
+                      <b style={{marginRight: '0.5vw'}}>Current Gcode Line:</b>{activeGcode}
+                    </Paper>
+                  </Grid>
+
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around', alignItems: 'center'}}
                 >
