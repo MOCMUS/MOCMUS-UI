@@ -53,9 +53,11 @@ SerialPort.list().then(ports => {
 const responsesDispatcher = (data) => {
     let datastr
     console.log(data)
-    event.emit('console_command', data.toString())
     datachunk.push(data.toString())
-    // console.log(datachunk[datachunk.length - 1])
+    if (datachunk[datachunk.length - 1].includes('ok')) {
+        const datachunk_tmp = datachunk.map(val => 'w5pl1t' + val)
+        event.emit('console_command', datachunk_tmp)
+    }
 
     // Report dependant gcode send
     if (gcodeSendMode === 2) {
@@ -74,7 +76,6 @@ const responsesDispatcher = (data) => {
             datastr = datastr?.split('>')[0]
         }
         event.emit('current_positions', datastr)
-        datachunk.splice(0, datachunk.length)
     }
 
 }
@@ -89,11 +90,12 @@ event.on('gcode_done', () => {
     if (isPaused !== null) {
         if (!isPaused) {
             arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
-                console.log('line sent: ', gcode[fileIndex])
+                console.log(`line [${fileIndex}] sent:`, gcode[fileIndex])
                 fileIndex++
                 if (fileIndex === gcode.length) {
                     fileIndex = 0
                     isPaused = null
+                    gcode.splice(0, gcode.length)
                 }
             })
         }
@@ -155,6 +157,7 @@ app.post('/api/upload-gcode', (req, res, next) => {
 })
 
 app.get("/api/current-positions", (req, res) => {
+    datachunk.splice(0, datachunk.length)
     sendCommand('?'+'\r', 'current_positions').then((data) => {
         res.send(data)
     })
@@ -162,6 +165,7 @@ app.get("/api/current-positions", (req, res) => {
 })
 
 app.post("/api/console-command", (req, res) => {
+    datachunk.splice(0, datachunk.length)
     sendCommand(req.body.command +'\r', 'console_command').then((data) => {
         res.send(data)
     })
@@ -170,7 +174,7 @@ app.post("/api/console-command", (req, res) => {
 
 app.post("/api/jog-command", (req, res) => {
     arduinoSerialPort.write(req.body.command +'\r', () => {
-        res.send('Jog sended')
+        res.send('Jog sent')
     })
         
 })
@@ -196,10 +200,26 @@ app.post("/api/unit-report", (req, res) => {
         
 })
 
+app.post("/api/position-report", (req, res) => {
+    arduinoSerialPort.write(req.body.command +'\r', () => {
+        res.send('position report changed')
+    })
+        
+})
+
 app.post("/api/spindle-speed", (req, res) => {
     arduinoSerialPort.write(req.body.command +'\r', () => {
         res.send('spindle command sent')
     })
+        
+})
+
+app.get("/api/active-gcode", (req, res) => {
+    if (gcode?.length && fileIndex !== 0) {
+        return res.send(`[${fileIndex}]: ${gcode[fileIndex - 1]}`)
+    }
+
+    return res.send('no Gcode is currently executed')
         
 })
 
@@ -320,6 +340,7 @@ app.post("/api/gcode-runner", (req, res) => {
             case 'stop':
                 fileIndex = 0
                 isPaused = null
+                gcode.splice(0, gcode.length)
             break;
             case 'pause':
             if (typeof isPaused !== 'undefined') {

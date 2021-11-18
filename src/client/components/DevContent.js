@@ -6,14 +6,14 @@ import Axios from 'axios'
 
 export default function DevContent () {
     const [command, setCommand] = useState('')
-    const [machineLog, setMachineLog] = useState('')
+    const [machineLog, setMachineLog] = useState([])
 
     const handleSubmit = (inputValue) => {
         if (inputValue === '')
           return
         Axios.post('/console-command', { command: inputValue })
         .then(e => {
-            setMachineLog(machineLog.concat('\n' + e.data.toString()))
+            setMachineLog(old => [...old, ...e.data.split('w5pl1t').splice(1)])
         })
         setCommand('')
     
@@ -54,7 +54,7 @@ export default function DevContent () {
                 <Grid item style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: 20}}>
                     <h1 style={styles.title}>Machine Responses</h1>
                     <div style={{marginTop: 10}}>
-                            {machineLog.split("\n").map((i,key) => {
+                            {machineLog?.map((i,key) => {
                         return <div style={{color: '#BBE1FF'}} key={key}>{i}</div>;
                         })}
                     </div>

@@ -54,8 +54,9 @@ export const styles = {
 
     layoutContainer:{
         width:'100vw',
-        height:'100vh',
-        overflow: 'hidden'
+        minHeight: '100vh',
+        height:'100%',
+        // overflow: 'hidden'
     },
 
     gridContainer:{

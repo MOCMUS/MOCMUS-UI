@@ -10,8 +10,25 @@ export default function GcodeInfoContent () {
     const [activeFileName, setActiveFileName] = useState(sessionStorage.getItem('selected_file') ? sessionStorage.getItem('selected_file') : 'no file selected')
     const [fileLoading, setFileLoading] = useState(0)
     const [isFileReadyToRun, setIsFileReadyToRun] = useState(sessionStorage.getItem('selected_file') ? true : false)
+    const [activeGcode, setActiveGcode] = useState('')
     const hiddenFileInput = useRef(null)
     const acceptedFileTypes = '.nc, .cnc, .ngc, .gcode, .tap'
+
+    useEffect(() => {
+        getActiveGcode()
+        const refreshInterval = setInterval(()=>{
+          getActiveGcode()
+        },1000)
+        
+        
+        return()=>clearInterval(refreshInterval)
+      }, [])
+
+    const getActiveGcode = () => {
+      Axios.get('/active-gcode').then(e => {
+        setActiveGcode(e.data)
+      })
+    }
 
     const handleselectedFile = e => {
         setSelectedFile(e.target.files[0])
@@ -102,7 +119,12 @@ export default function GcodeInfoContent () {
                 >
                   <h1 style={styles.title}>Machining Controls</h1>  
                 </Grid>
-                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around'}}
+                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'center'}}>
+                  <Paper variant='outlined' style={{display: 'flex', alignItems: 'center', height: '5vh', paddingRight: '0.5vw', paddingLeft: '0.5vw', backgroundColor: 'rgb(187, 225, 250)', fontSize: '2vh'}}>
+                    <b style={{marginRight: '0.5vw'}}>Current Gcode Line:</b>{activeGcode}
+                  </Paper>
+                </Grid>
+                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around', alignItems: 'center'}}
                 >
                 <Button
                     variant="contained"
@@ -123,7 +145,7 @@ export default function GcodeInfoContent () {
                         Run
                 </Button>
                 </Grid>
-                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around'}}
+                <Grid item style={{display: 'flex', flex: 2, justifyContent: 'space-around', alignItems: 'center'}}
                 >
                     <Button
                         variant="contained"
