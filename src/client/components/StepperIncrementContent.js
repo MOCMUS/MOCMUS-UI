@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Icon, Grid, Button, Paper, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import { ChevronRight, Refresh } from '@material-ui/icons';
@@ -35,6 +35,16 @@ export default function StepperIncrementContent () {
     const [unit, setUnit] = useState(sessionStorage.getItem('unit') ? sessionStorage.getItem('unit') : 'G21')
     const [step, setStep] = useState(sessionStorage.getItem('step') ? sessionStorage.getItem('step') : 'G91')
     const [feedrate, setFeedrate] = useState(sessionStorage.getItem('manual_feedrate') ? sessionStorage.getItem('manual_feedrate') : '200')
+    const [spindleSpeed, setSpindleSpeed] = useState(sessionStorage.getItem('spindle_speed') ? sessionStorage.getItem('spindle_speed') : '0')
+
+    useEffect(() => {
+        const refreshInterval = setInterval(()=>{
+            setSpindleSpeed(sessionStorage.getItem('spindle_speed') ? sessionStorage.getItem('spindle_speed') : '0')
+        },2000)
+        
+        
+        return()=>clearInterval(refreshInterval)
+    }, [])
 
     const setTxtFieldValue = (value, axis) => {
         switch(axis) {
@@ -278,25 +288,42 @@ export default function StepperIncrementContent () {
                         Send C
                     </Button>
                 </Grid>
-                <Grid item style={{display: 'flex', flex: 1, justifyContent: 'space-around'}} >
-                    <Grid item style={{display: 'flex', flex: 1, justifyContent: 'space-evenly'}}>
-                    <Paper className={classes.axisCard}> F </Paper>
-                    <Paper style={styles.textfield}>
-                    <TextField
-                        id="feedrate-field"
-                        type="number"
-                        inputProps={{min: '100', max: '1500', style: inputStyle}}
-                        variant='outlined'
-                        value={feedrate}
-                        onChange={(value) => setTxtFieldValue(event.target.value, 'feedrate')}
-                        InputLabelProps={{
-                        shrink: true,
-                        }}
-                    />
-                    </Paper>
+                <Grid item style={{display: 'flex', flex: 1.5, justifyContent: 'space-around'}} >
+                    <Grid item style={{display: 'flex', flex: 1, flexDirection: 'column'}}>
+                        <Grid item style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around'}}>
+                                <Paper className={classes.axisCard}> F </Paper>
+                                <Paper className={classes.axisCard}> S </Paper>
+                        </Grid>
+                        <Grid item style={{display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'space-around'}}>
+                                <Paper style={{...styles.textfield, marginRight: '0.4vw', marginLeft: '0.4vw'}}>
+                                <TextField
+                                    id="feedrate-field"
+                                    type="number"
+                                    inputProps={{min: '100', max: '1500', style: inputStyle}}
+                                    variant='outlined'
+                                    value={feedrate}
+                                    onChange={(value) => setTxtFieldValue(event.target.value, 'feedrate')}
+                                    InputLabelProps={{
+                                    shrink: true,
+                                    }}
+                                />
+                                </Paper>
+                                <Paper style={{...styles.textfield, marginRight: '0.4vw', marginLeft: '0.4vw'}}>
+                                <TextField
+                                    id="spindle-speed-field"
+                                    type="number"
+                                    inputProps={{readOnly: true, min: '0', max: '20000', style: inputStyle}}
+                                    variant='outlined'
+                                    value={spindleSpeed}
+                                    InputLabelProps={{
+                                    shrink: true,
+                                    }}
+                                />
+                                </Paper>
+                        </Grid>
 
                     </Grid>
-                    <Grid item style={{display: 'flex', flex: 1, justifyContent: 'space-around', alignItems: 'center'}}>
+                    <Grid item style={{display: 'flex', flex: 1.5, justifyContent: 'space-around', alignItems: 'center'}}>
                     <Button
                         variant="contained"
                         color="primary"

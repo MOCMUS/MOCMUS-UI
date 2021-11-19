@@ -65,7 +65,12 @@ const responsesDispatcher = (data) => {
             if (fileIndex != gcode.length) {
                 event.emit('gcode_done')
             }
-            if (fileIndex === 0) console.timeEnd('Gcode execution time')
+            if (!isSpeedCmd) {
+                if (fileIndex === 0) console.timeEnd('Gcode execution time')
+            } else {
+                isSpeedCmd = false
+            }
+
         }
     }
 
@@ -207,7 +212,10 @@ app.post("/api/position-report", (req, res) => {
         
 })
 
+let isSpeedCmd = false
+
 app.post("/api/spindle-speed", (req, res) => {
+    isSpeedCmd = true
     arduinoSerialPort.write(req.body.command +'\r', () => {
         res.send('spindle command sent')
     })

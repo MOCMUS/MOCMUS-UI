@@ -73,10 +73,10 @@ export default function SpindleControlsContent () {
                         Set
                     </Button>
                 </Grid>
-                <Grid item style={{display: 'flex', width: '50%', flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center'}}
+                <Grid item style={{display: 'flex', width: '50%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}
                 >
-                    <Paper variant='outlined' style={{display: 'flex', alignItems: 'center', height: '6vh', paddingRight: '0.5vw', paddingLeft: '0.5vw', backgroundColor: 'rgb(187, 225, 250)', fontSize: '2.5vh'}}>
-                        <b style={{marginRight: '0.5vw'}}>Spindle Speed:</b>{sessionStorage.getItem('spindle_speed') ? sessionStorage.getItem('spindle_speed') : '0'}
+                    <Paper variant='outlined' style={{display: 'flex', alignItems: 'center', height: '6vh', paddingRight: '0.5vw', paddingLeft: '0.5vw', marginBottom: '4vh', backgroundColor: 'rgb(187, 225, 250)', fontSize: '2.5vh'}}>
+                        <b>Spindle Speed</b>
                     </Paper>
                     <Paper style={styles.textfield}>
                         <TextField
