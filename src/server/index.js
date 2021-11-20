@@ -191,6 +191,13 @@ app.post("/api/wcs-command", (req, res) => {
         
 })
 
+app.post("/api/reset-command", (req, res) => {
+    arduinoSerialPort.write(req.body.command +'\r', () => {
+        res.send('reset sent')
+    })
+        
+})
+
 app.post("/api/homing-cycle", (req, res) => {
     arduinoSerialPort.write(req.body.command +'\r', () => {
         res.send('homing cycle started')
