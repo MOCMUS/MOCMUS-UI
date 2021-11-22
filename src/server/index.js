@@ -74,7 +74,7 @@ const responsesDispatcher = (data) => {
 
     // Report dependant gcode send
     if (gcodeSendMode === 2) {
-        if (data.toString().includes('ok')) {
+        if (data.toString().includes('ok_gcode')) {
             if (fileIndex != gcode.length) {
                 event.emit('gcode_done')
             }
