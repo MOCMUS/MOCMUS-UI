@@ -1,10 +1,11 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Icon, Grid, Button, TextField, Paper, Fade, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import { ChevronRight, Stop, PlayArrow } from '@material-ui/icons';
 import { styles } from '../styles/theme'
 import { description } from '../assets/errorlist'
 import SwitchSelector from "react-switch-selector"
+import useInterval from 'react-useinterval'
 import Axios from 'axios'
 
 const useStyles = makeStyles({
@@ -31,6 +32,24 @@ export default function AlarmSwitchContent () {
   const [activeAlarmList, setActiveAlarmList] = useState([])
   const [activeHoldList, setActiveHoldList] = useState([])
   const [activeDoorList, setActiveDoorList] = useState([])
+
+  useEffect(() => {
+    getActiveErrors()
+  }, [])
+
+
+  const getActiveErrors = () => {
+    Axios.get('/error-feedback').then(e => {
+      if (e.data.activeErrors.length !== activeErrorList.length) {
+        setActiveErrorList(e.data.activeErrors)
+      }
+
+      if (e.data.activeAlarms.length !== activeAlarmList.length) {
+        setActiveAlarmList(e.data.activeErrors)
+      }
+
+    })
+  }
 
   const setSwitchesValue = (value, switchName) => {
       switch(switchName) {
@@ -130,6 +149,8 @@ export default function AlarmSwitchContent () {
       </React.Fragment>));
   }
 
+  useInterval(() => getActiveErrors(), 5000)
+
     return (
       <div style={styles.divInitContent}>
           <Grid style={{flexDirection: 'column'}}
@@ -137,7 +158,7 @@ export default function AlarmSwitchContent () {
             >
                 <Grid item style={{display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center'}}
                 >
-                  <h1 style={styles.title}>Alarm Info</h1>  
+                  <h1 style={styles.title}>Machine State</h1>  
                 </Grid>
                 <Grid item style={{display: 'flex', flex: 5, flexDirection: 'row'}}
                 >

@@ -28,6 +28,7 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-switch-selector": "^1.2.1",
+    "react-useinterval": "^1.0.2",
     "serialport": "^9.0.7"
   },
   "devDependencies": {

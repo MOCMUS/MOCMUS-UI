@@ -50,10 +50,23 @@ SerialPort.list().then(ports => {
     })
 })
 
+const activeErrors = []
+const activeAlarms = []
+
 const responsesDispatcher = (data) => {
     let datastr
     console.log(data)
     datachunk.push(data.toString())
+
+    if (data.toString().includes('error')) {
+        activeErrors.push(parseInt(data.toString().split(':')[1]))
+    }
+
+    if (data.toString().includes('ALARM')) {
+        activeAlarms.push(parseInt(data.toString().split(':')[1]))
+    }
+
+
     if (datachunk[datachunk.length - 1].includes('ok')) {
         const datachunk_tmp = datachunk.map(val => 'w5pl1t' + val)
         event.emit('console_command', datachunk_tmp)
@@ -192,6 +205,9 @@ app.post("/api/wcs-command", (req, res) => {
 })
 
 app.post("/api/reset-command", (req, res) => {
+    console.log(activeErrors)
+    activeErrors.splice(0, activeErrors.length)
+    activeAlarms.splice(0, activeAlarms.length)
     arduinoSerialPort.write(req.body.command +'\r', () => {
         res.send('reset sent')
     })
@@ -237,6 +253,11 @@ app.get("/api/active-gcode", (req, res) => {
 
     return res.send({activeGcode: 'no Gcode is currently executed', index: 0, fileLength: 100})
         
+})
+
+app.get("/api/error-feedback", (req, res) => {
+    return res.send({activeErrors: activeErrors, activeAlarms: activeAlarms})
+
 })
 
 app.post("/api/gcode-runner", (req, res) => {
