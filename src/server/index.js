@@ -33,7 +33,7 @@ SerialPort.list().then(ports => {
         count++
         pm = port.manufacturer
 
-        if (typeof pm !== 'undefined' && (pm.includes('FTDI') || pm.includes('Microsoft') || pm.includes('Arduino'))) {
+        if (typeof pm !== 'undefined' && (pm.includes('FTDI') || pm.includes('Arduino'))) {
             path = port.path
             arduinoSerialPort = new SerialPort(path, { baudRate: 115200 })
             const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\r\n' }))
@@ -50,10 +50,23 @@ SerialPort.list().then(ports => {
     })
 })
 
+const activeErrors = []
+const activeAlarms = []
+
 const responsesDispatcher = (data) => {
     let datastr
     console.log(data)
     datachunk.push(data.toString())
+
+    if (data.toString().includes('error')) {
+        activeErrors.push(parseInt(data.toString().split(':')[1]))
+    }
+
+    if (data.toString().includes('ALARM')) {
+        activeAlarms.push(parseInt(data.toString().split(':')[1]))
+    }
+
+
     if (datachunk[datachunk.length - 1].includes('ok')) {
         const datachunk_tmp = datachunk.map(val => 'w5pl1t' + val)
         event.emit('console_command', datachunk_tmp)
@@ -65,7 +78,12 @@ const responsesDispatcher = (data) => {
             if (fileIndex != gcode.length) {
                 event.emit('gcode_done')
             }
-            if (fileIndex === 0) console.timeEnd('Gcode execution time')
+            if (!isSpeedCmd) {
+                if (fileIndex === 0) console.timeEnd('Gcode execution time')
+            } else {
+                isSpeedCmd = false
+            }
+
         }
     }
 
@@ -186,6 +204,16 @@ app.post("/api/wcs-command", (req, res) => {
         
 })
 
+app.post("/api/reset-command", (req, res) => {
+    console.log(activeErrors)
+    activeErrors.splice(0, activeErrors.length)
+    activeAlarms.splice(0, activeAlarms.length)
+    arduinoSerialPort.write(req.body.command +'\r', () => {
+        res.send('reset sent')
+    })
+        
+})
+
 app.post("/api/homing-cycle", (req, res) => {
     arduinoSerialPort.write(req.body.command +'\r', () => {
         res.send('homing cycle started')
@@ -207,7 +235,10 @@ app.post("/api/position-report", (req, res) => {
         
 })
 
+let isSpeedCmd = false
+
 app.post("/api/spindle-speed", (req, res) => {
+    isSpeedCmd = true
     arduinoSerialPort.write(req.body.command +'\r', () => {
         res.send('spindle command sent')
     })
@@ -216,11 +247,17 @@ app.post("/api/spindle-speed", (req, res) => {
 
 app.get("/api/active-gcode", (req, res) => {
     if (gcode?.length && fileIndex !== 0) {
-        return res.send(`[${fileIndex}]: ${gcode[fileIndex - 1]}`)
+        const gcodeLine = `[${fileIndex}]: ${gcode[fileIndex - 1]}`
+        return res.send({activeGcode: gcodeLine, index: fileIndex, fileLength: gcode?.length})
     }
 
-    return res.send('no Gcode is currently executed')
+    return res.send({activeGcode: 'no Gcode is currently executed', index: 0, fileLength: 100})
         
+})
+
+app.get("/api/error-feedback", (req, res) => {
+    return res.send({activeErrors: activeErrors, activeAlarms: activeAlarms})
+
 })
 
 app.post("/api/gcode-runner", (req, res) => {

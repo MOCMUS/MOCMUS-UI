@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Icon, Grid, Button, TextField, Paper, Container } from '@material-ui/core';
 import { ChevronRight, Stop } from '@material-ui/icons';
 import { styles } from './../styles/theme'
@@ -7,13 +7,22 @@ import Axios from 'axios'
 export default function DevContent () {
     const [command, setCommand] = useState('')
     const [machineLog, setMachineLog] = useState([])
+    let isMounted
+
+    useEffect(() => {
+        isMounted = true
+
+        return () => { isMounted = false }
+      }, [])
 
     const handleSubmit = (inputValue) => {
         if (inputValue === '')
           return
         Axios.post('/console-command', { command: inputValue })
         .then(e => {
-            setMachineLog(old => [...old, ...e.data.split('w5pl1t').splice(1)])
+            if (isMounted) {
+                setMachineLog(old => [...old, ...e.data.split('w5pl1t').splice(1)])
+            }
         })
         setCommand('')
     
