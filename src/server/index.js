@@ -107,15 +107,17 @@ const gcodeSendMode = 2  // 1 = Frequency Mode ; 2 = Report Mode
 event.on('gcode_done', () => {
     if (isPaused !== null) {
         if (!isPaused) {
-            arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
-                console.log(`line [${fileIndex}] sent:`, gcode[fileIndex])
-                fileIndex++
-                if (fileIndex === gcode.length) {
-                    fileIndex = 0
-                    isPaused = null
-                    gcode.splice(0, gcode.length)
-                }
-            })
+            setTimeout(() => {
+                arduinoSerialPort.write(gcode[fileIndex] +'\r', () => {
+                    console.log(`line [${fileIndex}] sent:`, gcode[fileIndex])
+                    fileIndex++
+                    if (fileIndex === gcode.length) {
+                        fileIndex = 0
+                        isPaused = null
+                        gcode.splice(0, gcode.length)
+                    }
+                })
+            },100)
         }
     }
 })
