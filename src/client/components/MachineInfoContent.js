@@ -1,6 +1,7 @@
 import React, { Component, Text, useState, useEffect } from 'react';
 import { Icon, Grid, Button, Paper, TextField, RadioGroup } from '@material-ui/core';
 import Axios from 'axios'
+import useInterval from 'react-useinterval'
 import { ChevronRight } from '@material-ui/icons';
 import { styles } from './../styles/theme'
 
@@ -110,15 +111,11 @@ export default function MachineInfoContent () {
         }
       }
 
-    // useEffect(() => {
-    //     getPositions()
-    //     const refreshInterval = setInterval(()=>{
-    //         getPositions()
-    //     },5000)
-        
-        
-    //     return()=>clearInterval(refreshInterval)
-    //   }, [])
+    useEffect(() => {
+        getPositions()
+      }, [])
+
+    // useInterval(() => getPositions(), 2000)
 
     const inputStyle = {
         fontSize: '4vh',
